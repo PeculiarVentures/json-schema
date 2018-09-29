@@ -1,6 +1,6 @@
 # JSON-SCHEMA
 
-Implements ES2015 decorators for JSON schema creation. Created decorators can be used for serialization or parsing
+Implements ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON schema creation. The decorators can be used for both serialization or parsing of JSON greatly simplify working with JSON.
 
 
 ## Introduction
@@ -10,13 +10,14 @@ JSON (JavaScript Object Notation) is a lightweight data-interchange format. It i
 
 ## Installation
 
-Using npm:
+Installation is handled via  `npm`:
 
 ```
 $ npm install json-schema
 ```
 
-In Node.js:
+## Examples
+Node.js:
 
 ```js
 var {JsonParser, JsonSerializer, JsonProp, JsonPropTypes} = require("json-schema");
