@@ -5,8 +5,8 @@ import { JsonSerializer } from "../src/serializer";
 import { schemaStorage } from "../src/storage";
 
 const CustomNumberConverter: IJsonConverter<number, string> = {
-  parse: (value: string) => parseInt(value, 10),
-  serialize: (value: number) => value.toString(),
+  fromJSON: (value: string) => parseInt(value, 10),
+  toJSON: (value: number) => value.toString(),
 };
 
 context("JsonSerializer", () => {

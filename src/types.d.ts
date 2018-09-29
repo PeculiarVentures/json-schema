@@ -3,8 +3,8 @@ interface IEmptyConstructor<T> {
 }
 
 interface IJsonConverter<T, S> {
-  parse(value: S, target: any): T;
-  serialize(value: T, target: any): S;
+  fromJSON(value: S, target: any): T;
+  toJSON(value: T, target: any): S;
 }
 
 interface IJsonConvertible<T = any> {

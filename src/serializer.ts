@@ -48,9 +48,9 @@ export class JsonSerializer {
               // CONVERTER
               if (item.repeated) {
                 // REPEATED
-                value = objItem.map((el: any) => item.converter!.serialize(el, obj));
+                value = objItem.map((el: any) => item.converter!.toJSON(el, obj));
               } else {
-                value = item.converter.serialize(objItem, obj);
+                value = item.converter.toJSON(objItem, obj);
               }
             } else {
               value = objItem;

@@ -4,8 +4,8 @@ import { JsonParser } from "../src/parser";
 import { JsonPropTypes } from "../src/prop_types";
 
 const CustomNumberConverter: IJsonConverter<number, string> = {
-  parse: (value: string) => parseInt(value, 10),
-  serialize: (value: number) => value.toString(),
+  fromJSON: (value: string) => parseInt(value, 10),
+  toJSON: (value: number) => value.toString(),
 };
 
 context("Parse", () => {

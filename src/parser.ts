@@ -38,9 +38,9 @@ export class JsonParser {
         if (item.converter) {
           if (item.repeated) {
             // REPEATED
-            obj[key] = value.map((el: any) => item.converter!.parse(el, obj));
+            obj[key] = value.map((el: any) => item.converter!.fromJSON(el, obj));
           } else {
-            obj[key] = item.converter.parse(value, obj);
+            obj[key] = item.converter.fromJSON(value, obj);
           }
         } else {
           if (!item.repeated && !checkType(value, item.type)) {
