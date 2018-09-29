@@ -1,14 +1,16 @@
 {
   "name": "json-schema",
   "version": "1.0.0",
-  "description": "",
+  "description": "This package uses ES2015 decorators to simplify JSON schema creation and use",
   "main": "build/index.js",
   "types": "index.d.ts",
   "scripts": {
     "test": "mocha",
     "prepare": "npm run build",
     "build": "rollup -c",
-    "prepub": "npm run build",
+    "lint": "tslint 'src/**/*.ts'",
+    "tsc": "tsc --noEmit",
+    "prepub": "npm run lint && npm run test && npm run tsc",
     "pub": "npm version patch && npm publish && git push",
     "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"

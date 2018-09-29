@@ -10,6 +10,9 @@ jobs:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
       - run:
+          name: install-tslint
+          command: sudo npm install -g tslint@latest
+      - run:
           name: install-coveralls
           command: sudo npm install -g coveralls@latest
       - run:
@@ -24,6 +27,9 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+      - run: # run tslint
+          name: test-code-coverage
+          command: npm run lint
       - run: # run tests with code coverage
           name: test-code-coverage
           command: npm run coverage
