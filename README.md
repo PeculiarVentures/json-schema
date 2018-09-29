@@ -5,7 +5,7 @@ This package uses ES2015 [decorators](https://medium.com/google-developers/explo
 
 ## Introduction
 
-JSON (JavaScript Object Notation) is a lightweight data-interchange format that was designed to be easy for humans to read and write but in practice, it is [minefiled](http://seriot.ch/parsing_json.html) when it machines need to parse it.
+JSON (JavaScript Object Notation) is a lightweight data-interchange format that was designed to be easy for humans to read and write but in practice, it is [minefield](http://seriot.ch/parsing_json.html) when it machines need to parse it.
 
 While the use of schemas can help with this problem their use can be complicated. When using `JSON-SCHEMA` this is addressed by using decorators to make both serialization and parsing of XML possible via a simple class that handles the schemas for you.  
 
