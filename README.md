@@ -21,8 +21,9 @@ $ npm install json-schema
 ```
 
 ## Examples
-Node.js:
+### Node.js
 
+Creating a schema:
 ```js
 var {JsonParser, JsonSerializer, JsonProp, JsonPropTypes} = require("json-schema");
 
@@ -85,7 +86,7 @@ console.log(jsonText);
 // }
 ```
 
-Schema extending
+Extending a Schema :
 ```js
 class BaseObject {
   @JsonProp({ name: "i" })
