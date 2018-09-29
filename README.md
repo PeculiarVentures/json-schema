@@ -72,9 +72,8 @@ console.log(jsonText);
 // Output
 //
 // EcPublicKey {keyType: "EC", namedCurve: "P-256", x: Uint8Array(32), y: Uint8Array(32), extractable: true, …}
-// index.ts:59
+//
 // {
-// index.ts:64
 //   "kty": "EC",
 //   "crv": "P-256",
 //   "x": "zCQ5BPHPCLZYgdpo1n+x/90P2Ij52d53YVwTh3ZdiMo=",
@@ -86,7 +85,7 @@ console.log(jsonText);
 // }
 ```
 
-Extending a Schema :
+Extending a Schema:
 ```js
 class BaseObject {
   @JsonProp({ name: "i" })
