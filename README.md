@@ -1,7 +1,8 @@
+# PV-JSON-SCHEMA
+
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/PeculiarVentures/json-schema/master/LICENSE.md)
 [![CircleCI](https://circleci.com/gh/PeculiarVentures/json-schema.svg?style=svg)](https://circleci.com/gh/PeculiarVentures/json-schema)
 [![Coverage Status](https://coveralls.io/repos/github/PeculiarVentures/json-schema/badge.svg?branch=master&t=ddJivl)](https://coveralls.io/github/PeculiarVentures/json-schema?branch=master)
-
-# JSON-SCHEMA
 
 This package uses ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON [schema creation and use](https://json-schema.org/understanding-json-schema/index.html). 
 
@@ -10,7 +11,7 @@ This package uses ES2015 [decorators](https://medium.com/google-developers/explo
 
 JSON (JavaScript Object Notation) is a lightweight data-interchange format that was designed to be easy for humans to read and write but in practice, it is [minefield](http://seriot.ch/parsing_json.html) when it machines need to parse it.
 
-While the use of schemas can help with this problem their use can be complicated. When using `json-schema` this is addressed by using decorators to make both serialization and parsing of XML possible via a simple class that handles the schemas for you.  
+While the use of schemas can help with this problem their use can be complicated. When using `pv-json-schema` this is addressed by using decorators to make both serialization and parsing of XML possible via a simple class that handles the schemas for you.  
 
 This is important because validating input data before its use is important to do because all input data is evil. Using a schema helps you handle this data [safely](https://www.whitehatsec.com/blog/handling-untrusted-json-safely/). 
 
@@ -20,7 +21,7 @@ This is important because validating input data before its use is important to d
 Installation is handled via  `npm`:
 
 ```
-$ npm install json-schema
+$ npm install pv-json-schema
 ```
 
 ## Examples
@@ -28,7 +29,7 @@ $ npm install json-schema
 
 Creating a schema:
 ```js
-var {JsonParser, JsonSerializer, JsonProp, JsonPropTypes} = require("json-schema");
+import {JsonParser, JsonSerializer, JsonProp, JsonPropTypes} from ("pv-json-schema");
 
 // custom data converter
 const JsonBase64Urlonverter: IJsonConverter<Uint8Array, string> = {
