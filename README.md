@@ -1,3 +1,6 @@
+[![CircleCI](https://circleci.com/gh/PeculiarVentures/json-schema.svg?style=svg)](https://circleci.com/gh/PeculiarVentures/json-schema)
+[![Coverage Status](https://coveralls.io/repos/github/PeculiarVentures/json-schema/badge.svg?branch=master&t=ddJivl)](https://coveralls.io/github/PeculiarVentures/json-schema?branch=master)
+
 # JSON-SCHEMA
 
 This package uses ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON [schema creation and use](https://json-schema.org/understanding-json-schema/index.html). 
