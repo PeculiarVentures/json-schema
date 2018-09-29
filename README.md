@@ -1,11 +1,15 @@
 # JSON-SCHEMA
 
-Implements ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON schema creation. The decorators can be used for both serialization and parsing of JSON which greatly simplify working with JSON by enabling you to declare a JSON schema via a class.
+This package uses ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON [schema creation and use](https://json-schema.org/understanding-json-schema/index.html). 
 
 
 ## Introduction
 
-JSON (JavaScript Object Notation) is a lightweight data-interchange format. It is easy for humans to read and write.
+JSON (JavaScript Object Notation) is a lightweight data-interchange format that was designed to be easy for humans to read and write but in practice, it is [minefiled](http://seriot.ch/parsing_json.html) when it machines need to parse it.
+
+The use of schemas can help with this problem but the use of schemas use can be complicated. When using `JSON-SCHEMA` this problem is addressed by using decorators to make both serialization and parsing possible via a simple class. 
+
+Validating input data before its use is important to do because all input data is evil. Using a schema helps you handle this data [safely](https://www.whitehatsec.com/blog/handling-untrusted-json-safely/). 
 
 
 ## Installation
