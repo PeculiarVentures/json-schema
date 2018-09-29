@@ -7,9 +7,9 @@ This package uses ES2015 [decorators](https://medium.com/google-developers/explo
 
 JSON (JavaScript Object Notation) is a lightweight data-interchange format that was designed to be easy for humans to read and write but in practice, it is [minefiled](http://seriot.ch/parsing_json.html) when it machines need to parse it.
 
-The use of schemas can help with this problem but the use of schemas use can be complicated. When using `JSON-SCHEMA` this problem is addressed by using decorators to make both serialization and parsing possible via a simple class. 
+While the use of schemas can help with this problem their use can be complicated. When using `JSON-SCHEMA` this is addressed by using decorators to make both serialization and parsing of XML possible via a simple class that handles the schemas for you.  
 
-Validating input data before its use is important to do because all input data is evil. Using a schema helps you handle this data [safely](https://www.whitehatsec.com/blog/handling-untrusted-json-safely/). 
+This is important because validating input data before its use is important to do because all input data is evil. Using a schema helps you handle this data [safely](https://www.whitehatsec.com/blog/handling-untrusted-json-safely/). 
 
 
 ## Installation
