@@ -10,6 +10,9 @@ jobs:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
       - run:
+          name: install-typescript
+          command: sudo npm install -g typescript@latest
+      - run:
           name: install-tslint
           command: sudo npm install -g tslint@latest
       - run:
