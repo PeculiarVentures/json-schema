@@ -1,6 +1,6 @@
 # JSON-SCHEMA
 
-Implements ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON schema creation. The decorators can be used for both serialization or parsing of JSON greatly simplify working with JSON.
+Implements ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON schema creation. The decorators can be used for both serialization and parsing of JSON which greatly simplify working with JSON.
 
 
 ## Introduction
