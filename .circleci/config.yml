@@ -11,6 +11,9 @@ jobs:
           command: 'sudo npm install -g npm@latest'
       - run:
           name: install-coveralls
+          command: sudo npm install -g coveralls@latest
+      - run:
+          name: install-nyc
           command: sudo npm install -g nyc@latest
       - restore_cache: # special step to restore the dependency cache 
           key: dependency-cache-{{ checksum "package.json" }}
