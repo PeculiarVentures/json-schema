@@ -1,5 +1,5 @@
 {
-  "name": "@pv/json-schema",
+  "name": "@peculiar/json-schema",
   "version": "1.0.2",
   "description": "This package uses ES2015 decorators to simplify JSON schema creation and use",
   "main": "build/index.js",
@@ -14,6 +14,10 @@
     "pub": "npm version patch && npm publish && git push",
     "coverage": "nyc npm test",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeculiarVentures/json-schema.git"
   },
   "keywords": [
     "json",
