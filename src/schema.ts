@@ -23,7 +23,7 @@ export class JsonSchemaStorage {
   }
 
   public get(target: object) {
-    const schema = this.items.get(target);
+    const schema = this.items.get(target) || this.findParentSchema(target);
     if (!schema) {
       throw new Error("Cannot get schema for current target");
     }
