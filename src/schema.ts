@@ -33,7 +33,7 @@ export class JsonSchemaStorage {
 
   public create(target: object) {
     // Initialize default JSON schema
-    const schema = { items: {}, target } as IJsonSchema;
+    const schema = { items: {} } as IJsonSchema;
 
     // Get and assign schema from parent
     const parentSchema = this.findParentSchema(target);
@@ -41,6 +41,8 @@ export class JsonSchemaStorage {
       Object.assign(schema, parentSchema);
       schema.items = Object.assign({}, schema.items, parentSchema.items);
     }
+
+    schema.target = target as any;
 
     return schema;
   }
