@@ -12,6 +12,7 @@ export interface IJsonSchemaItem {
 }
 
 export interface IJsonSchema {
+  target: IEmptyConstructor<any>;
   items: { [key: string]: IJsonSchemaItem };
 }
 
@@ -19,7 +20,7 @@ export class JsonSchemaStorage {
   protected items = new Map<object, IJsonSchema>();
 
   public has(target: object) {
-    return this.items.has(target);
+    return this.items.has(target) || !!this.findParentSchema(target);
   }
 
   public get(target: object) {
@@ -32,7 +33,7 @@ export class JsonSchemaStorage {
 
   public create(target: object) {
     // Initialize default JSON schema
-    const schema = { items: {} } as IJsonSchema;
+    const schema = { items: {}, target } as IJsonSchema;
 
     // Get and assign schema from parent
     const parentSchema = this.findParentSchema(target);

@@ -13,6 +13,10 @@ export const JsonProp = (options: IJsonPropOptions = {}) => (target: object, pro
     schemaStorage.set(target.constructor, schema);
   } else {
     schema = schemaStorage.get(target.constructor);
+    if (schema.target !== target.constructor) {
+      schema = schemaStorage.create(target.constructor);
+      schemaStorage.set(target.constructor, schema);
+    }
   }
   const copyOptions = Object.assign({ type: JsonPropTypes.Any }, options) as IJsonSchemaItem;
 
