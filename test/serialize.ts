@@ -233,6 +233,19 @@ context("JsonSerializer", () => {
       assert.equal(json, `{"v":{"v":{"value":2}}}`);
     });
   });
+  it("extended type with additional props", () => {
+    class Test {
+      @JsonProp()
+      public id = "1";
+    }
+    class Child extends Test {
+      @JsonProp()
+      public text = "some";
+    }
+
+    const json = JsonSerializer.serialize(new Child());
+    assert.equal(json, `{"id":"1","text":"some"}`);
+  });
   context("array", () => {
     it("primitives", () => {
       const json = JsonSerializer.serialize([1, 2, 3]);
