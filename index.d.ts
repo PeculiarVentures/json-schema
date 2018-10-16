@@ -33,8 +33,13 @@ declare namespace JsonSchema {
   const JsonProp: (options?: IJsonPropOptions) => PropertyDecorator;
 
   class JsonSerializer {
-    public static serialize(obj: any, replacer?: (key: string, value: any) => any, space?: string | number): string;
-    public static toJSON(obj: any): any;
+    public static serialize(
+      obj: any,
+      targetSchema?: IEmptyConstructor<any> | null,
+      replacer?: (key: string, value: any) => any,
+      space?: string | number,
+    ): string;
+    public static toJSON(obj: any, targetSchema?: IEmptyConstructor<any> | null): any;
   }
 
   class JsonParser {

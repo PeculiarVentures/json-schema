@@ -129,19 +129,19 @@ context("JsonSerializer", () => {
 
     it("don't throw error if type has toJSON/fromJSON methods", () => {
       // assert.doesNotThrow(() => {
-        class Child implements IJsonConvertible {
-          public value = 2;
-          public fromJSON(json: any): this {
-            throw new Error("Method not implemented.");
-          }
-          public toJSON() {
-            throw new Error("Method not implemented.");
-          }
+      class Child implements IJsonConvertible {
+        public value = 2;
+        public fromJSON(json: any): this {
+          throw new Error("Method not implemented.");
         }
-        class Test {
-          @JsonProp({ type: Child })
-          public child = new Child();
+        public toJSON() {
+          throw new Error("Method not implemented.");
         }
+      }
+      class Test {
+        @JsonProp({ type: Child })
+        public child = new Child();
+      }
       // });
     });
     it("throw error if type class doesn't have schema or toJSON/fromJSON methods", () => {
@@ -233,9 +233,125 @@ context("JsonSerializer", () => {
       assert.equal(json, `{"v":{"v":{"value":2}}}`);
     });
   });
-  it("array", () => {
-    const json = JsonSerializer.serialize([1, 2, 3]);
-    assert.equal(json, `[1,2,3]`);
+  context("array", () => {
+    it("primitives", () => {
+      const json = JsonSerializer.serialize([1, 2, 3]);
+      assert.equal(json, `[1,2,3]`);
+    });
+    context("constructed", () => {
+      it("simple constructed type", () => {
+        class Test {
+          @JsonProp()
+          public value = "";
+
+          constructor(param?: string) {
+            if (param) {
+              this.value = param;
+            }
+          }
+        }
+        const json = JsonSerializer.serialize([new Test("1"), new Test("2"), new Test("3")]);
+        assert.equal(json, `[{"value":"1"},{"value":"2"},{"value":"3"}]`);
+      });
+      it("extended constructed type, child class doesn't have JsonProp", () => {
+        const JsonDateConverter: IJsonConverter<Date, string> = {
+          fromJSON: (value: string) => new Date(value),
+          toJSON: (value: Date) => value.toISOString(),
+        };
+
+        class Test {
+          @JsonProp({ converter: JsonDateConverter })
+          public createdAt = new Date(10000);
+          @JsonProp()
+          public value = "";
+
+          constructor(param?: string) {
+            if (param) {
+              this.value = param;
+            }
+          }
+        }
+        class Child extends Test {
+          public text = "some";
+        }
+
+        const json = JsonSerializer.serialize([new Child("1"), new Child("2"), new Child("3")]);
+        // tslint:disable-next-line:max-line-length
+        assert.equal(json, `[{"createdAt":"1970-01-01T00:00:10.000Z","value":"1"},{"createdAt":"1970-01-01T00:00:10.000Z","value":"2"},{"createdAt":"1970-01-01T00:00:10.000Z","value":"3"}]`);
+      });
+    });
+  });
+
+  context("serialize with target schema", () => {
+    it("simple", () => {
+      const JsonDateConverter: IJsonConverter<Date, string> = {
+        fromJSON: (value: string) => new Date(value),
+        toJSON: (value: Date) => value.toISOString(),
+      };
+
+      class Test {
+        @JsonProp({ converter: JsonDateConverter })
+        public createdAt = new Date(10000);
+        @JsonProp()
+        public value = "";
+
+        constructor(param?: string) {
+          if (param) {
+            this.value = param;
+          }
+        }
+      }
+
+      const json = JsonSerializer.serialize({
+        createdAt: new Date(10000),
+        value: "text",
+      }, Test);
+
+      assert.equal(json, `{"createdAt":"1970-01-01T00:00:10.000Z","value":"text"}`);
+    });
+    it("throw error on bad data", () => {
+      const JsonDateConverter: IJsonConverter<Date, string> = {
+        fromJSON: (value: string) => new Date(value),
+        toJSON: (value: Date) => value.toISOString(),
+      };
+
+      class Test {
+        @JsonProp({ converter: JsonDateConverter })
+        public createdAt = new Date(10000);
+        @JsonProp()
+        public value = "";
+
+        constructor(param?: string) {
+          if (param) {
+            this.value = param;
+          }
+        }
+      }
+
+      assert.throws(() => {
+        JsonSerializer.serialize({
+          createdAt: new Date(10000),
+        }, Test);
+      });
+    });
+    it("throw error for bad target schema", () => {
+      class Test {
+        public createdAt = new Date(10000);
+        public value = "";
+
+        constructor(param?: string) {
+          if (param) {
+            this.value = param;
+          }
+        }
+      }
+
+      assert.throws(() => {
+        JsonSerializer.serialize({
+          createdAt: new Date(10000),
+        }, Test);
+      });
+    });
   });
 
 });

@@ -2,11 +2,12 @@ import { isConvertible } from "./helper";
 import { schemaStorage } from "./storage";
 
 export class JsonSerializer {
-  public static serialize(obj: any, replacer?: (key: string, value: any) => any, space?: string | number): string {
-    const json = this.toJSON(obj);
+  // tslint:disable-next-line:max-line-length
+  public static serialize(obj: any, targetSchema?: IEmptyConstructor<any> | null, replacer?: (key: string, value: any) => any, space?: string | number): string {
+    const json = this.toJSON(obj, targetSchema || undefined);
     return JSON.stringify(json, replacer, space);
   }
-  public static toJSON(obj: any): any {
+  public static toJSON(obj: any, targetSchema?: IEmptyConstructor<any>): any {
     let res: any;
 
     if (isConvertible(obj)) {
@@ -21,8 +22,13 @@ export class JsonSerializer {
       }
     } else if (typeof obj === "object") {
       // OBJECT
-      if (schemaStorage.has(obj.constructor)) {
-        const schema = schemaStorage.get(obj.constructor);
+      if (targetSchema && !schemaStorage.has(targetSchema)) {
+        throw new Error("Cannot get schema for `targetSchema` param");
+      }
+
+      targetSchema = (targetSchema || obj.constructor) as IEmptyConstructor<any>;
+      if (schemaStorage.has(targetSchema)) {
+        const schema = schemaStorage.get(targetSchema);
         res = {};
 
         for (const key in schema.items) {
