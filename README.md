@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/PeculiarVentures/json-schema/master/LICENSE.md)
 [![CircleCI](https://circleci.com/gh/PeculiarVentures/json-schema.svg?style=svg)](https://circleci.com/gh/PeculiarVentures/json-schema)
 [![Coverage Status](https://coveralls.io/repos/github/PeculiarVentures/json-schema/badge.svg?branch=master&t=ddJivl)](https://coveralls.io/github/PeculiarVentures/json-schema?branch=master)
-[![npm version](https://badge.fury.io/js/@peculiar/json-schema.svg)](https://badge.fury.io/js/@peculiar/json-schema)
+[![npm version](https://badge.fury.io/js/%40peculiar%2Fjson-schema.svg)](https://badge.fury.io/js/%40peculiar%2Fjson-schema)
 
 [![NPM](https://nodei.co/npm/@peculiar/json-schema.png)](https://nodei.co/npm/@peculiar/json-schema/)
 
