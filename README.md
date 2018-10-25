@@ -3,9 +3,9 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/PeculiarVentures/json-schema/master/LICENSE.md)
 [![CircleCI](https://circleci.com/gh/PeculiarVentures/json-schema.svg?style=svg)](https://circleci.com/gh/PeculiarVentures/json-schema)
 [![Coverage Status](https://coveralls.io/repos/github/PeculiarVentures/json-schema/badge.svg?branch=master&t=ddJivl)](https://coveralls.io/github/PeculiarVentures/json-schema?branch=master)
-[![npm version](https://badge.fury.io/js/@pv/json-schema.svg)](https://badge.fury.io/js/@pv/json-schema)
+[![npm version](https://badge.fury.io/js/@pv/json-schema.svg)](https://badge.fury.io/js/@peculiar/json-schema)
 
-[![NPM](https://nodei.co/npm/@pv/json-schema.png)](https://nodei.co/npm/@pv/json-schema/)
+[![NPM](https://nodei.co/npm/@pv/json-schema.png)](https://nodei.co/npm/@peculiar/json-schema/)
 
 This package uses ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON [schema creation and use](https://json-schema.org/understanding-json-schema/index.html). 
 
@@ -24,7 +24,7 @@ This is important because validating input data before its use is important to d
 Installation is handled via  `npm`:
 
 ```
-$ npm install @pv/json-schema
+$ npm install @peculiar/json-schema
 ```
 
 ## Examples
