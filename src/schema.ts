@@ -2,6 +2,11 @@
 
 import { JsonPropTypes } from "./prop_types";
 
+export interface IValidationEvent {
+  propName: string;
+  value: any;
+}
+
 export interface IJsonSchemaItem {
   type: JsonPropTypes | IEmptyConstructor<any>;
   optional?: boolean;
@@ -9,6 +14,7 @@ export interface IJsonSchemaItem {
   converter?: IJsonConverter<any, any>;
   repeated?: boolean;
   name?: string;
+  validations: IValidation[];
 }
 
 export interface IJsonSchema {

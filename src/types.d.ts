@@ -11,3 +11,7 @@ interface IJsonConvertible<T = any> {
   fromJSON(json: T): this;
   toJSON(): T;
 }
+
+interface IValidation {
+  validate(value: any): void;
+}

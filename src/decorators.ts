@@ -2,8 +2,27 @@ import { isConvertible } from "./helper";
 import { JsonPropTypes } from "./prop_types";
 import { IJsonSchema, IJsonSchemaItem } from "./schema";
 import { schemaStorage } from "./storage";
+import { PatternValidation } from "./validations/pattern";
 
-export type IJsonPropOptions = Partial<IJsonSchemaItem>;
+export interface IJsonPropOptions {
+  type?: JsonPropTypes | IEmptyConstructor<any>;
+  optional?: boolean;
+  defaultValue?: any;
+  converter?: IJsonConverter<any, any>;
+  repeated?: boolean;
+  name?: string;
+  pattern?: string | RegExp;
+}
+
+function getValidations(item: IJsonPropOptions) {
+  const validations: IValidation[] = [];
+
+  if (item.pattern) {
+    validations.push(new PatternValidation(item.pattern));
+  }
+
+  return validations;
+}
 
 export const JsonProp = (options: IJsonPropOptions = {}) => (target: object, propertyKey: string) => {
   const errorMessage = `Cannot set type for ${propertyKey} property of ${target.constructor.name} schema`;
@@ -18,7 +37,12 @@ export const JsonProp = (options: IJsonPropOptions = {}) => (target: object, pro
       schemaStorage.set(target.constructor, schema);
     }
   }
-  const copyOptions = Object.assign({ type: JsonPropTypes.Any }, options) as IJsonSchemaItem;
+
+  const defaultSchema: IJsonSchemaItem = {
+    type: JsonPropTypes.Any,
+    validations: getValidations(options),
+  };
+  const copyOptions = Object.assign(defaultSchema, options) as IJsonSchemaItem;
 
   if (typeof copyOptions.type !== "number") {
     // CONSTRUCTED

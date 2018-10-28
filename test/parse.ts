@@ -2,6 +2,7 @@ import * as assert from "assert";
 import { JsonProp } from "../src/decorators";
 import { JsonParser } from "../src/parser";
 import { JsonPropTypes } from "../src/prop_types";
+import { JsonSerializer } from "../src";
 
 const CustomNumberConverter: IJsonConverter<number, string> = {
   fromJSON: (value: string) => parseInt(value, 10),
@@ -161,6 +162,52 @@ context("Parse", () => {
           });
         });
       });
+    });
+    context("validations", () => {
+
+      context("pattern", () => {
+
+        context("RegExp type", () => {
+
+          class Test {
+            @JsonProp({pattern: /[0-9]{6}/})
+            public text!: string;
+          }
+
+          it("matches", () => {
+            const json = `{"text":"123456"}`;
+
+            const test = JsonParser.parse(json, Test);
+            assert.equal(test.text, test.text);
+          });
+
+          it("second checking", () => {
+            const json = `{"text":"123456"}`;
+
+            const test = JsonParser.parse(json, Test);
+            assert.equal(test.text, test.text);
+          });
+
+          it("bad value", () => {
+            const json = `{"text":"a23456"}`;
+
+            assert.throws(() => {
+              JsonParser.parse(json, Test);
+            });
+          });
+
+          it("throw error if pattern is using for not string type", () => {
+            const json = `{"text":123456}`;
+
+            assert.throws(() => {
+              JsonParser.parse(json, Test);
+            });
+          });
+
+        });
+
+      });
+
     });
   });
 

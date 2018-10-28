@@ -38,8 +38,13 @@ export class JsonParser {
         if (item.converter) {
           if (item.repeated) {
             // REPEATED
-            obj[key] = value.map((el: any) => item.converter!.fromJSON(el, obj));
+            if (!Array.isArray(value)) {
+              throw new TypeError(`${targetSchema.name}: Value for property '${key}' is not an array`);
+            }
+            value.forEach((el) => item.validations.forEach((v) => v.validate(el)));
+            obj[key] = value.map((el) => item.converter!.fromJSON(el, obj));
           } else {
+            item.validations.forEach((v) => v.validate(value));
             obj[key] = item.converter.fromJSON(value, obj);
           }
         } else {
@@ -47,6 +52,7 @@ export class JsonParser {
             // check types for single values only
             throw new Error(`'${name}' property must be ${JsonPropTypes[item.type]} for schema '${targetSchema.name}'`);
           }
+          item.validations.forEach((v) => v.validate(value));
           obj[key] = value;
         }
       } else {

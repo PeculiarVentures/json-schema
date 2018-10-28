@@ -45,7 +45,7 @@ export class JsonSerializer {
 
           if (!item.optional && objItem === undefined) {
             // REQUIRED
-            throw new Error(`Property '${key}' is required in '${obj.constructor.name}' schema`);
+            throw new Error(`Property '${key}' is required in '${targetSchema.name}' schema`);
           }
 
           if (typeof item.type === "number") {
@@ -55,11 +55,14 @@ export class JsonSerializer {
               if (item.repeated) {
                 // REPEATED
                 value = objItem.map((el: any) => item.converter!.toJSON(el, obj));
+                value.forEach((el: any) => item.validations.forEach((v) => v.validate(el)));
               } else {
                 value = item.converter.toJSON(objItem, obj);
+                item.validations.forEach((v) => v.validate(value));
               }
             } else {
               value = objItem;
+              item.validations.forEach((v) => v.validate(value));
             }
           } else {
             // CONSTRUCTED
