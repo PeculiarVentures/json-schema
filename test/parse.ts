@@ -2,7 +2,6 @@ import * as assert from "assert";
 import { JsonProp } from "../src/decorators";
 import { JsonParser } from "../src/parser";
 import { JsonPropTypes } from "../src/prop_types";
-import { JsonSerializer } from "../src";
 
 const CustomNumberConverter: IJsonConverter<number, string> = {
   fromJSON: (value: string) => parseInt(value, 10),
@@ -91,6 +90,21 @@ context("Parse", () => {
         assert.equal(obj.value[1], 2);
         assert.equal(obj.value[2], 3);
       });
+      it("throw error if property is not Array", () => {
+        class Test {
+          @JsonProp({
+            repeated: true,
+            type: JsonPropTypes.String,
+          })
+          public values: string[] = [];
+        }
+
+        assert.throws(() => {
+          JsonParser.fromJSON({
+            values: "not Array",
+          }, Test);
+        });
+      });
     });
     context("check types", () => {
       context("boolean", () => {
@@ -170,7 +184,7 @@ context("Parse", () => {
         context("RegExp type", () => {
 
           class Test {
-            @JsonProp({pattern: /[0-9]{6}/})
+            @JsonProp({ pattern: /[0-9]{6}/ })
             public text!: string;
           }
 
