@@ -2,16 +2,24 @@
 
 import { ParserError } from "./errors";
 import { isConvertible } from "./helper";
-import { schemaStorage } from "./storage";
+import { DEFAULT_SCHEMA, schemaStorage } from "./storage";
 import { JsonTransform } from "./transform";
 
+export interface IJsonParserOptions<T> {
+  targetSchema: IEmptyConstructor<T>;
+  schemaName?: string;
+}
+
 export class JsonParser extends JsonTransform {
-  public static parse<T>(data: string, schema: IEmptyConstructor<T>): T {
+  public static parse<T>(data: string, options: IJsonParserOptions<T>): T {
     const obj = JSON.parse(data);
-    return this.fromJSON(obj, schema);
+    return this.fromJSON(obj, options);
   }
 
-  public static fromJSON<T>(target: any, targetSchema: IEmptyConstructor<T>): T {
+  public static fromJSON<T>(target: any, options: IJsonParserOptions<T>): T {
+    const targetSchema = options.targetSchema;
+    const schemaName = options.schemaName || DEFAULT_SCHEMA;
+
     const obj = new targetSchema() as any;
 
     if (isConvertible(obj)) {
@@ -19,10 +27,11 @@ export class JsonParser extends JsonTransform {
     }
 
     const schema = schemaStorage.get(targetSchema);
+    const namedSchema = schema.names[schemaName] || schema.names[DEFAULT_SCHEMA];
 
-    for (const key in schema.items) {
+    for (const key in namedSchema) {
       try {
-        const item = schema.items[key];
+        const item = namedSchema[key];
         const name = item.name || key;
         const value = target[name];
 
@@ -54,9 +63,15 @@ export class JsonParser extends JsonTransform {
           // CONSTRUCTED
           if (item.repeated) {
             // REPEATED
-            obj[key] = value.map((el: any) => this.fromJSON(el, item.type as IEmptyConstructor<any>));
+            obj[key] = value.map((el: any) => this.fromJSON(el, {
+              targetSchema: item.type as IEmptyConstructor<any>,
+              schemaName,
+            }));
           } else {
-            obj[key] = this.fromJSON(value, item.type);
+            obj[key] = this.fromJSON(value, {
+              targetSchema: item.type,
+              schemaName,
+            });
           }
         }
       } catch (e) {

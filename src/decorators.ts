@@ -1,7 +1,7 @@
 import { isConvertible } from "./helper";
 import { JsonPropTypes } from "./prop_types";
 import { IJsonSchema, IJsonSchemaItem } from "./schema";
-import { schemaStorage } from "./storage";
+import { DEFAULT_SCHEMA, schemaStorage } from "./storage";
 import { EnumerationValidation, ExclusiveValidation, InclusiveValidation, LengthValidation } from "./validations";
 import { PatternValidation } from "./validations/pattern";
 
@@ -12,6 +12,10 @@ export interface IJsonPropOptions {
   converter?: IJsonConverter<any, any>;
   repeated?: boolean;
   name?: string;
+  /**
+   * Defines name of schema
+   */
+  schema?: string;
 
   // string
   /**
@@ -110,5 +114,10 @@ export const JsonProp = (options: IJsonPropOptions = {}) => (target: object, pro
     }
   }
 
-  schema.items[propertyKey] = copyOptions;
+  const schemaName = options.schema || DEFAULT_SCHEMA;
+  if (!schema.names[schemaName]) {
+    schema.names[schemaName] = {};
+  }
+  const namedSchema = schema.names[schemaName];
+  namedSchema[propertyKey] = copyOptions;
 };

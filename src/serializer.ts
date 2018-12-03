@@ -1,17 +1,23 @@
 import { JsonError, SerializerError } from "./errors";
-import { isConvertible, throwIfTypeIsWrong } from "./helper";
-import { JsonPropTypes } from "./prop_types";
-import { schemaStorage } from "./storage";
+import { isConvertible } from "./helper";
+import { DEFAULT_SCHEMA, schemaStorage } from "./storage";
 import { JsonTransform } from "./transform";
+
+export interface IJsonSerializerOptions {
+  targetSchema?: IEmptyConstructor<any>;
+  schemaName?: string;
+}
 
 export class JsonSerializer extends JsonTransform {
   // tslint:disable-next-line:max-line-length
-  public static serialize(obj: any, targetSchema?: IEmptyConstructor<any> | null, replacer?: (key: string, value: any) => any, space?: string | number): string {
-    const json = this.toJSON(obj, targetSchema || undefined);
+  public static serialize(obj: any, options?: IJsonSerializerOptions, replacer?: (key: string, value: any) => any, space?: string | number): string {
+    const json = this.toJSON(obj, options);
     return JSON.stringify(json, replacer, space);
   }
-  public static toJSON(obj: any, targetSchema?: IEmptyConstructor<any>): any {
+  public static toJSON(obj: any, options: IJsonSerializerOptions = {}): any {
     let res: any;
+    let targetSchema = options.targetSchema;
+    const schemaName = options.schemaName || DEFAULT_SCHEMA;
 
     if (isConvertible(obj)) {
       return obj.toJSON();
@@ -34,9 +40,12 @@ export class JsonSerializer extends JsonTransform {
         const schema = schemaStorage.get(targetSchema);
         res = {};
 
-        for (const key in schema.items) {
+        // Get named schema
+        const namedSchema = schema.names[schemaName] || schema.names[DEFAULT_SCHEMA];
+
+        for (const key in namedSchema) {
           try {
-            const item = schema.items[key];
+            const item = namedSchema[key];
             const objItem = obj[key];
             let value: any;
 
@@ -69,9 +78,9 @@ export class JsonSerializer extends JsonTransform {
               // CONSTRUCTED
               if (item.repeated) {
                 // REPEATED
-                value = objItem.map((el: any) => this.toJSON(el));
+                value = objItem.map((el: any) => this.toJSON(el, { schemaName }));
               } else {
-                value = this.toJSON(objItem);
+                value = this.toJSON(objItem, { schemaName });
               }
             }
 
@@ -93,7 +102,7 @@ export class JsonSerializer extends JsonTransform {
       } else {
         res = {};
         for (const key in obj) {
-          res[key] = this.toJSON(obj[key]);
+          res[key] = this.toJSON(obj[key], { schemaName });
         }
       }
     } else {

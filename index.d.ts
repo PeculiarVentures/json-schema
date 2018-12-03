@@ -28,6 +28,10 @@ declare namespace JsonSchema {
     converter?: IJsonConverter<any, any>;
     repeated?: boolean;
     name?: string;
+    /**
+     * Defines name of schema
+     */
+    schema?: string;
     // string
     /**
      * Defines regular expression for text
