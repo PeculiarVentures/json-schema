@@ -2,7 +2,7 @@ import { isConvertible } from "./helper";
 import { JsonPropTypes } from "./prop_types";
 import { IJsonSchema, IJsonSchemaItem } from "./schema";
 import { schemaStorage } from "./storage";
-import { ExclusiveValidation, InclusiveValidation, LengthValidation, EnumerationValidation } from "./validations";
+import { EnumerationValidation, ExclusiveValidation, InclusiveValidation, LengthValidation } from "./validations";
 import { PatternValidation } from "./validations/pattern";
 
 export interface IJsonPropOptions {
