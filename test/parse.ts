@@ -90,6 +90,21 @@ context("Parse", () => {
         assert.equal(obj.value[1], 2);
         assert.equal(obj.value[2], 3);
       });
+      it("throw error if property is not Array", () => {
+        class Test {
+          @JsonProp({
+            repeated: true,
+            type: JsonPropTypes.String,
+          })
+          public values: string[] = [];
+        }
+
+        assert.throws(() => {
+          JsonParser.fromJSON({
+            values: "not Array",
+          }, Test);
+        });
+      });
     });
     context("check types", () => {
       context("boolean", () => {
@@ -161,6 +176,52 @@ context("Parse", () => {
           });
         });
       });
+    });
+    context("validations", () => {
+
+      context("pattern", () => {
+
+        context("RegExp type", () => {
+
+          class Test {
+            @JsonProp({ pattern: /[0-9]{6}/ })
+            public text!: string;
+          }
+
+          it("matches", () => {
+            const json = `{"text":"123456"}`;
+
+            const test = JsonParser.parse(json, Test);
+            assert.equal(test.text, test.text);
+          });
+
+          it("second checking", () => {
+            const json = `{"text":"123456"}`;
+
+            const test = JsonParser.parse(json, Test);
+            assert.equal(test.text, test.text);
+          });
+
+          it("bad value", () => {
+            const json = `{"text":"a23456"}`;
+
+            assert.throws(() => {
+              JsonParser.parse(json, Test);
+            });
+          });
+
+          it("throw error if pattern is using for not string type", () => {
+            const json = `{"text":123456}`;
+
+            assert.throws(() => {
+              JsonParser.parse(json, Test);
+            });
+          });
+
+        });
+
+      });
+
     });
   });
 

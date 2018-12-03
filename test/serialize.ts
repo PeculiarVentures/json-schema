@@ -123,6 +123,33 @@ context("JsonSerializer", () => {
       const json = JsonSerializer.serialize(new Test());
       assert.equal(json, `{"v":"2"}`);
     });
+
+    context("validations", () => {
+      context("pattern", () => {
+
+        class Test {
+          @JsonProp({pattern: "^[0-9]{6}$"})
+          public text!: string;
+        }
+
+        it("correct value", () => {
+          const test = new Test();
+          test.text = "010203";
+
+          const json = JsonSerializer.serialize(test);
+          assert.equal(json, `{"text":"010203"}`);
+        });
+
+        it("bad value", () => {
+          const test = new Test();
+          test.text = "0102";
+
+          assert.throws(() => {
+            JsonSerializer.serialize(test);
+          });
+        });
+      });
+    });
   });
 
   context("constructed", () => {

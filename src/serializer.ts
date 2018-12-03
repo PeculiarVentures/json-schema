@@ -1,7 +1,10 @@
-import { isConvertible } from "./helper";
+import { JsonError, SerializerError } from "./errors";
+import { isConvertible, throwIfTypeIsWrong } from "./helper";
+import { JsonPropTypes } from "./prop_types";
 import { schemaStorage } from "./storage";
+import { JsonTransform } from "./transform";
 
-export class JsonSerializer {
+export class JsonSerializer extends JsonTransform {
   // tslint:disable-next-line:max-line-length
   public static serialize(obj: any, targetSchema?: IEmptyConstructor<any> | null, replacer?: (key: string, value: any) => any, space?: string | number): string {
     const json = this.toJSON(obj, targetSchema || undefined);
@@ -23,7 +26,7 @@ export class JsonSerializer {
     } else if (typeof obj === "object") {
       // OBJECT
       if (targetSchema && !schemaStorage.has(targetSchema)) {
-        throw new Error("Cannot get schema for `targetSchema` param");
+        throw new JsonError("Cannot get schema for `targetSchema` param");
       }
 
       targetSchema = (targetSchema || obj.constructor) as IEmptyConstructor<any>;
@@ -32,46 +35,60 @@ export class JsonSerializer {
         res = {};
 
         for (const key in schema.items) {
-          const item = schema.items[key];
-          const objItem = obj[key];
-          let value: any;
+          try {
+            const item = schema.items[key];
+            const objItem = obj[key];
+            let value: any;
 
-          // DEFAULT VALUE || OPTIONAL
-          if ((item.optional && objItem === undefined)
-            || (item.defaultValue !== undefined && objItem === item.defaultValue)) {
-            // skip value
-            continue;
-          }
+            // DEFAULT VALUE || OPTIONAL
+            if ((item.optional && objItem === undefined)
+              || (item.defaultValue !== undefined && objItem === item.defaultValue)) {
+              // skip value
+              continue;
+            }
 
-          if (!item.optional && objItem === undefined) {
-            // REQUIRED
-            throw new Error(`Property '${key}' is required in '${obj.constructor.name}' schema`);
-          }
+            if (!item.optional && objItem === undefined) {
+              // REQUIRED
+              throw new SerializerError(targetSchema.name, `Property '${key}' is required.`);
+            }
 
-          if (typeof item.type === "number") {
-            // PRIMITIVE
-            if (item.converter) {
-              // CONVERTER
-              if (item.repeated) {
-                // REPEATED
-                value = objItem.map((el: any) => item.converter!.toJSON(el, obj));
+            if (typeof item.type === "number") {
+              // PRIMITIVE
+              if (item.converter) {
+                // CONVERTER
+                if (item.repeated) {
+                  // REPEATED
+                  value = objItem.map((el: any) => item.converter!.toJSON(el, obj));
+                } else {
+                  value = item.converter.toJSON(objItem, obj);
+                }
               } else {
-                value = item.converter.toJSON(objItem, obj);
+                value = objItem;
               }
             } else {
-              value = objItem;
+              // CONSTRUCTED
+              if (item.repeated) {
+                // REPEATED
+                value = objItem.map((el: any) => this.toJSON(el));
+              } else {
+                value = this.toJSON(objItem);
+              }
             }
-          } else {
-            // CONSTRUCTED
-            if (item.repeated) {
-              // REPEATED
-              value = objItem.map((el: any) => this.toJSON(el));
+
+            this.checkTypes(value, item);
+            this.checkValues(value, item);
+
+            res[item.name || key] = value;
+          } catch (e) {
+            if (e instanceof SerializerError) {
+              throw e;
             } else {
-              value = this.toJSON(objItem);
+              throw new SerializerError(
+                schema.target.name,
+                `Property '${key}' is wrong. ${e.message}`,
+                e);
             }
           }
-
-          res[item.name || key] = value;
         }
       } else {
         res = {};

@@ -14,6 +14,12 @@ export function checkType(value: any, type: JsonPropTypes) {
   return true;
 }
 
+export function throwIfTypeIsWrong(value: any, type: JsonPropTypes) {
+  if (!checkType(value, type)) {
+    throw new TypeError(`Value must be ${JsonPropTypes[type]}`);
+  }
+}
+
 export function isConvertible(target: any): target is IJsonConvertible {
   if (target && target.prototype) {
     if (target.prototype.toJSON && target.prototype.fromJSON) {
