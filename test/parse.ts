@@ -18,7 +18,9 @@ context("Parse", () => {
       }
 
       const json = `{"value":2,"odd":1}`;
-      const obj = JsonParser.parse(json, Test);
+      const obj = JsonParser.parse(json, {
+        targetSchema: Test,
+      });
       assert.equal(obj.value, 2);
       assert.equal((obj as any).odd, undefined);
     });
@@ -30,7 +32,9 @@ context("Parse", () => {
 
       const json = `{}`;
       assert.throws(() => {
-        JsonParser.parse(json, Test);
+        JsonParser.parse(json, {
+          targetSchema: Test,
+        });
       });
     });
     it("optional", () => {
@@ -40,7 +44,9 @@ context("Parse", () => {
       }
 
       const json = `{}`;
-      const obj = JsonParser.parse(json, Test);
+      const obj = JsonParser.parse(json, {
+        targetSchema: Test,
+      });
       assert.equal(obj.value, 0);
     });
     it("converter", () => {
@@ -50,7 +56,9 @@ context("Parse", () => {
       }
 
       const json = `{"value":"2"}`;
-      const obj = JsonParser.parse(json, Test);
+      const obj = JsonParser.parse(json, {
+        targetSchema: Test,
+      });
       assert.equal(obj.value, 2);
     });
     it("custom name", () => {
@@ -60,7 +68,9 @@ context("Parse", () => {
       }
 
       const json = `{"v":2}`;
-      const obj = JsonParser.parse(json, Test);
+      const obj = JsonParser.parse(json, {
+        targetSchema: Test,
+      });
       assert.equal(obj.value, 2);
     });
     context("repeated", () => {
@@ -71,7 +81,9 @@ context("Parse", () => {
         }
 
         const json = `{"v":[1,2,3]}`;
-        const obj = JsonParser.parse(json, Test);
+        const obj = JsonParser.parse(json, {
+          targetSchema: Test,
+        });
         assert.equal(obj.value.length, 3);
         assert.equal(obj.value[0], 1);
         assert.equal(obj.value[1], 2);
@@ -84,7 +96,9 @@ context("Parse", () => {
         }
 
         const json = `{"v":["1","2","3"]}`;
-        const obj = JsonParser.parse(json, Test);
+        const obj = JsonParser.parse(json, {
+          targetSchema: Test,
+        });
         assert.equal(obj.value.length, 3);
         assert.equal(obj.value[0], 1);
         assert.equal(obj.value[1], 2);
@@ -102,7 +116,9 @@ context("Parse", () => {
         assert.throws(() => {
           JsonParser.fromJSON({
             values: "not Array",
-          }, Test);
+          }, {
+              targetSchema: Test,
+            });
         });
       });
     });
@@ -115,7 +131,9 @@ context("Parse", () => {
           }
 
           const json = `{"v":true}`;
-          const obj = JsonParser.parse(json, Test);
+          const obj = JsonParser.parse(json, {
+            targetSchema: Test,
+          });
           assert.equal(obj.value, true);
         });
         it("wrong", () => {
@@ -126,7 +144,9 @@ context("Parse", () => {
 
           const json = `{"v":1}`;
           assert.throws(() => {
-            JsonParser.parse(json, Test);
+            JsonParser.parse(json, {
+              targetSchema: Test,
+            });
           });
         });
       });
@@ -138,7 +158,9 @@ context("Parse", () => {
           }
 
           const json = `{"v":1}`;
-          const obj = JsonParser.parse(json, Test);
+          const obj = JsonParser.parse(json, {
+            targetSchema: Test,
+          });
           assert.equal(obj.value, 1);
         });
         it("wrong", () => {
@@ -149,7 +171,9 @@ context("Parse", () => {
 
           const json = `{"v":"1"}`;
           assert.throws(() => {
-            JsonParser.parse(json, Test);
+            JsonParser.parse(json, {
+              targetSchema: Test,
+            });
           });
         });
       });
@@ -161,7 +185,9 @@ context("Parse", () => {
           }
 
           const json = `{"v":"text"}`;
-          const obj = JsonParser.parse(json, Test);
+          const obj = JsonParser.parse(json, {
+            targetSchema: Test,
+          });
           assert.equal(obj.value, "text");
         });
         it("wrong", () => {
@@ -172,7 +198,9 @@ context("Parse", () => {
 
           const json = `{"v":1}`;
           assert.throws(() => {
-            JsonParser.parse(json, Test);
+            JsonParser.parse(json, {
+              targetSchema: Test,
+            });
           });
         });
       });
@@ -191,14 +219,18 @@ context("Parse", () => {
           it("matches", () => {
             const json = `{"text":"123456"}`;
 
-            const test = JsonParser.parse(json, Test);
+            const test = JsonParser.parse(json, {
+              targetSchema: Test,
+            });
             assert.equal(test.text, test.text);
           });
 
           it("second checking", () => {
             const json = `{"text":"123456"}`;
 
-            const test = JsonParser.parse(json, Test);
+            const test = JsonParser.parse(json, {
+              targetSchema: Test,
+            });
             assert.equal(test.text, test.text);
           });
 
@@ -206,7 +238,9 @@ context("Parse", () => {
             const json = `{"text":"a23456"}`;
 
             assert.throws(() => {
-              JsonParser.parse(json, Test);
+              JsonParser.parse(json, {
+                targetSchema: Test,
+              });
             });
           });
 
@@ -214,7 +248,9 @@ context("Parse", () => {
             const json = `{"text":123456}`;
 
             assert.throws(() => {
-              JsonParser.parse(json, Test);
+              JsonParser.parse(json, {
+                targetSchema: Test,
+              });
             });
           });
 
@@ -237,7 +273,9 @@ context("Parse", () => {
       }
 
       const json = `{"child":{"value":2}}`;
-      const obj = JsonParser.parse(json, Parent);
+      const obj = JsonParser.parse(json, {
+        targetSchema: Parent,
+      });
       assert.equal(obj.child.value, 2);
     });
     it("repeated", () => {
@@ -251,7 +289,9 @@ context("Parse", () => {
       }
 
       const json = `{"children":[{"v":1},{"v":2}]}`;
-      const obj = JsonParser.parse(json, Parent);
+      const obj = JsonParser.parse(json, {
+        targetSchema: Parent,
+      });
       assert.equal(obj.children.length, 2);
       assert.equal(obj.children[0].value, 1);
       assert.equal(obj.children[1].value, 2);
@@ -268,9 +308,96 @@ context("Parse", () => {
           return this.name;
         }
       }
-      const test = JsonParser.parse(`"test"`, Test);
+      const test = JsonParser.parse(`"test"`, {
+        targetSchema: Test,
+      });
       assert.equal(test.name, "test");
     });
+  });
+
+  context("schema name", () => {
+
+    class Child {
+      @JsonProp({ name: "name" })
+      @JsonProp({ name: "n", schema: "short" })
+      public name = "Name";
+    }
+
+    class Test {
+      @JsonProp({ name: "value" })
+      @JsonProp({ name: "v", schema: "short" })
+      public value = "Value";
+
+      @JsonProp({ name: "child", type: Child })
+      @JsonProp({ name: "c", type: Child, schema: "short" })
+      public child = new Child();
+
+      @JsonProp({ name: "type" })
+      // Don't print type for short schema
+      public type = "Type";
+    }
+
+    it("default schema", () => {
+      const json = {
+        value: "Value_new",
+        child: {
+          name: "Name_new",
+        },
+        type: "Type_new",
+      };
+      const test = JsonParser.fromJSON(json, {
+        targetSchema: Test,
+      });
+      assert.deepEqual(test, {
+        value: "Value_new",
+        child: {
+          name: "Name_new",
+        },
+        type: "Type_new",
+      });
+    });
+
+    it("custom schema", () => {
+      const json = {
+        v: "Value_new",
+        c: {
+          n: "Name_new",
+        },
+      };
+      const test = JsonParser.fromJSON(json, {
+        targetSchema: Test,
+        schemaName: "short",
+      });
+      assert.deepEqual(test, {
+        value: "Value_new",
+        child: {
+          name: "Name_new",
+        },
+        type: "Type",
+      });
+    });
+
+    it("wrong schema name", () => {
+      const json = {
+        value: "Value_new",
+        child: {
+          name: "Name_new",
+        },
+        type: "Type_new",
+      };
+      const test = JsonParser.fromJSON(json, {
+        targetSchema: Test,
+        schemaName: "wrang",
+      });
+      assert.deepEqual(test, {
+        value: "Value_new",
+        child: {
+          name: "Name_new",
+        },
+        type: "Type_new",
+      });
+    });
+
   });
 
 });

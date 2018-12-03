@@ -2,7 +2,7 @@ import * as assert from "assert";
 import { JsonProp } from "../src/decorators";
 import { JsonPropTypes } from "../src/prop_types";
 import { JsonSerializer } from "../src/serializer";
-import { schemaStorage } from "../src/storage";
+import { DEFAULT_SCHEMA, schemaStorage } from "../src/storage";
 
 const CustomNumberConverter: IJsonConverter<number, string> = {
   fromJSON: (value: string) => parseInt(value, 10),
@@ -21,7 +21,7 @@ context("JsonSerializer", () => {
       }
 
       const schema = schemaStorage.get(Test);
-      assert.equal(schema.items.value.type, JsonPropTypes.Any);
+      assert.equal(schema.names[DEFAULT_SCHEMA].value.type, JsonPropTypes.Any);
 
       const json = JsonSerializer.serialize(new Test());
       assert.equal(json, `{"value":2}`);
@@ -35,7 +35,7 @@ context("JsonSerializer", () => {
       }
 
       const schema = schemaStorage.get(Test);
-      assert.equal(schema.items.value.type, JsonPropTypes.Number);
+      assert.equal(schema.names[DEFAULT_SCHEMA].value.type, JsonPropTypes.Number);
 
       const json = JsonSerializer.serialize(new Test());
       assert.equal(json, `{"value":2}`);
@@ -128,7 +128,7 @@ context("JsonSerializer", () => {
       context("pattern", () => {
 
         class Test {
-          @JsonProp({pattern: "^[0-9]{6}$"})
+          @JsonProp({ pattern: "^[0-9]{6}$" })
           public text!: string;
         }
 
@@ -345,7 +345,7 @@ context("JsonSerializer", () => {
       const json = JsonSerializer.serialize({
         createdAt: new Date(10000),
         value: "text",
-      }, Test);
+      }, { targetSchema: Test });
 
       assert.equal(json, `{"createdAt":"1970-01-01T00:00:10.000Z","value":"text"}`);
     });
@@ -371,7 +371,7 @@ context("JsonSerializer", () => {
       assert.throws(() => {
         JsonSerializer.serialize({
           createdAt: new Date(10000),
-        }, Test);
+        }, { targetSchema: Test });
       });
     });
     it("throw error for bad target schema", () => {
@@ -389,9 +389,72 @@ context("JsonSerializer", () => {
       assert.throws(() => {
         JsonSerializer.serialize({
           createdAt: new Date(10000),
-        }, Test);
+        }, { targetSchema: Test });
       });
     });
+  });
+
+  context("schema name", () => {
+
+    class Child {
+      @JsonProp({ name: "name" })
+      @JsonProp({ name: "n", schema: "short" })
+      public name = "Name";
+    }
+
+    class Test {
+      @JsonProp({ name: "value" })
+      @JsonProp({ name: "v", schema: "short" })
+      public value = "Value";
+
+      @JsonProp({ name: "child", type: Child })
+      @JsonProp({ name: "c", type: Child, schema: "short" })
+      public child = new Child();
+
+      @JsonProp({ name: "type" })
+      // Don't print type for short schema
+      public type = "Type";
+    }
+
+    it("default schema", () => {
+      const test = new Test();
+
+      const json = JsonSerializer.toJSON(test);
+      assert.deepEqual(json, {
+        value: "Value",
+        child: {
+          name: "Name",
+        },
+        type: "Type",
+      });
+    });
+
+    it("custom schema", () => {
+      const test = new Test();
+
+      const json = JsonSerializer.toJSON(test, { schemaName: "short" });
+      assert.deepEqual(json, {
+        v: "Value",
+        c: {
+          n: "Name",
+        },
+      });
+    });
+
+    it("wrong schema name", () => {
+      const test = new Test();
+
+      const json = JsonSerializer.toJSON(test, { schemaName: "wrong" });
+      // must use default schema
+      assert.deepEqual(json, {
+        value: "Value",
+        child: {
+          name: "Name",
+        },
+        type: "Type",
+      });
+    });
+
   });
 
 });

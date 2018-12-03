@@ -1,11 +1,13 @@
 import * as assert from "assert";
-import { JsonParser, JsonProp, JsonSerializer, JsonPropTypes } from "../src";
+import { JsonParser, JsonProp, JsonPropTypes, JsonSerializer } from "../src";
 
 function testValidationSuccess(obj: any, json: string) {
   const json2 = JsonSerializer.serialize(obj);
   assert.equal(json2, json);
 
-  const obj2 = JsonParser.parse(json, obj.constructor);
+  const obj2 = JsonParser.parse(json, {
+    targetSchema: obj.constructor,
+  });
   assert.deepEqual(obj2, obj);
 }
 
@@ -15,7 +17,9 @@ function testValidationWrong(obj: any, json: string) {
   });
 
   assert.throws(() => {
-    JsonParser.parse(json, obj.constructor);
+    JsonParser.parse(json, {
+      targetSchema: obj.constructor,
+    });
   });
 }
 

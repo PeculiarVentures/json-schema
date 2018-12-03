@@ -1,3 +1,5 @@
+/// <reference path="./types.d.ts" />
+
 import { throwIfTypeIsWrong } from "./helper";
 import { IJsonSchemaItem } from "./schema";
 import { LengthValidation } from "./validations";

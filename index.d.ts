@@ -28,6 +28,10 @@ declare namespace JsonSchema {
     converter?: IJsonConverter<any, any>;
     repeated?: boolean;
     name?: string;
+    /**
+     * Defines name of schema
+     */
+    schema?: string;
     // string
     /**
      * Defines regular expression for text
@@ -71,19 +75,29 @@ declare namespace JsonSchema {
 
   const JsonProp: (options?: IJsonPropOptions) => PropertyDecorator;
 
+  interface IJsonSerializerOptions {
+    targetSchema?: IEmptyConstructor<any>;
+    schemaName?: string;
+  }
+
   class JsonSerializer {
     public static serialize(
       obj: any,
-      targetSchema?: IEmptyConstructor<any> | null,
+      options?: IJsonSerializerOptions,
       replacer?: (key: string, value: any) => any,
       space?: string | number,
     ): string;
-    public static toJSON(obj: any, targetSchema?: IEmptyConstructor<any> | null): any;
+    public static toJSON(obj: any, options?: IJsonSerializerOptions): any;
+  }
+
+  interface IJsonParserOptions<T> {
+    targetSchema: IEmptyConstructor<T>;
+    schemaName?: string;
   }
 
   class JsonParser {
-    public static parse<T>(data: string, schema: IEmptyConstructor<T>): T;
-    public static fromJSON<T>(target: any, targetSchema: IEmptyConstructor<T>): T;
+    public static parse<T>(data: string, options: IJsonParserOptions<T>): T;
+    public static fromJSON<T>(target: any, options: IJsonParserOptions<T>): T;
   }
 }
 
