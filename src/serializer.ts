@@ -27,7 +27,7 @@ export class JsonSerializer extends JsonTransform {
       // ARRAY
       res = [];
       for (const item of obj) {
-        res.push(this.toJSON(item));
+        res.push(this.toJSON(item, options));
       }
     } else if (typeof obj === "object") {
       // OBJECT
