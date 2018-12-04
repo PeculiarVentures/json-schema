@@ -332,7 +332,7 @@ context("Parse", () => {
       @JsonProp({ name: "c", type: Child, schema: "short" })
       public child = new Child();
 
-      @JsonProp({ name: "type" })
+      @JsonProp({ name: "type", optional: true })
       // Don't print type for short schema
       public type = "Type";
     }

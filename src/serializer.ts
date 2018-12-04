@@ -40,8 +40,7 @@ export class JsonSerializer extends JsonTransform {
         const schema = schemaStorage.get(targetSchema);
         res = {};
 
-        // Get named schema
-        const namedSchema = schema.names[schemaName] || schema.names[DEFAULT_SCHEMA];
+        const namedSchema = this.getSchemaByName(schema, schemaName);
 
         for (const key in namedSchema) {
           try {

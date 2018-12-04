@@ -438,6 +438,7 @@ context("JsonSerializer", () => {
         c: {
           n: "Name",
         },
+        type: "Type",
       });
     });
 

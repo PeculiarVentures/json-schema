@@ -1,7 +1,8 @@
 /// <reference path="./types.d.ts" />
 
 import { throwIfTypeIsWrong } from "./helper";
-import { IJsonSchemaItem } from "./schema";
+import { IJsonSchema, IJsonSchemaItem } from "./schema";
+import { DEFAULT_SCHEMA } from "./storage";
 import { LengthValidation } from "./validations";
 
 export class JsonTransform {
@@ -29,6 +30,10 @@ export class JsonTransform {
         throwIfTypeIsWrong(v, schemaItem.type);
       }
     }
+  }
+
+  protected static getSchemaByName(schema: IJsonSchema, name: string = DEFAULT_SCHEMA) {
+    return { ...schema.names[DEFAULT_SCHEMA], ...schema.names[name] };
   }
 
 }
