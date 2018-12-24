@@ -1,6 +1,4 @@
-interface IEmptyConstructor<T> {
-  new(): T;
-}
+type IEmptyConstructor<T> = new() => T;
 
 interface IJsonConverter<T, S> {
   fromJSON(value: S, target: any): T;
