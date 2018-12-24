@@ -1,5 +1,6 @@
 import * as assert from "assert";
 import { JsonProp } from "../src/decorators";
+import { ParserError } from "../src/errors";
 import { JsonParser } from "../src/parser";
 import { JsonPropTypes } from "../src/prop_types";
 
@@ -396,6 +397,63 @@ context("Parse", () => {
         },
         type: "Type_new",
       });
+    });
+
+  });
+
+  context("Strict checking", () => {
+
+    context("strictProperty", () => {
+
+      it("option is disabled by default", () => {
+        class Test {
+          @JsonProp()
+          public value!: string;
+        }
+
+        assert.doesNotThrow(() => {
+          JsonParser.fromJSON({ value: "hello", odd: 1 }, { targetSchema: Test });
+        });
+      });
+
+      it("should throw error if JSON has od field and option is enabled", () => {
+        class Test {
+          @JsonProp()
+          public value!: string;
+        }
+
+        assert.throws(() => {
+          JsonParser.fromJSON({ value: "hello", odd: 1 }, { targetSchema: Test, strictProperty: true });
+        }, ParserError);
+      });
+
+      it("use checking for array items", () => {
+        class Test {
+          @JsonProp()
+          public value!: string;
+        }
+
+        class TestArray {
+          @JsonProp({ type: Test, repeated: true })
+          public items: Test[] = [];
+        }
+
+        assert.throws(() => {
+          JsonParser.fromJSON(
+            {
+              items: [
+                { value: "test1" },
+                { value: "test2", odd: 1 },
+              ],
+            },
+            {
+              targetSchema: TestArray,
+              strictProperty: true,
+            },
+          );
+        }, ParserError);
+      });
+
     });
 
   });

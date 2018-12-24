@@ -5,6 +5,10 @@ import { IJsonSchema, IJsonSchemaItem } from "./schema";
 import { DEFAULT_SCHEMA } from "./storage";
 import { LengthValidation } from "./validations";
 
+export interface IJsonNamedSchema {
+  [key: string]: IJsonSchemaItem;
+}
+
 export class JsonTransform {
 
   protected static checkValues(data: any, schemaItem: IJsonSchemaItem) {
@@ -32,7 +36,7 @@ export class JsonTransform {
     }
   }
 
-  protected static getSchemaByName(schema: IJsonSchema, name: string = DEFAULT_SCHEMA) {
+  protected static getSchemaByName(schema: IJsonSchema, name: string = DEFAULT_SCHEMA): IJsonNamedSchema {
     return { ...schema.names[DEFAULT_SCHEMA], ...schema.names[name] };
   }
 

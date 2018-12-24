@@ -93,6 +93,10 @@ declare namespace JsonSchema {
   interface IJsonParserOptions<T> {
     targetSchema: IEmptyConstructor<T>;
     schemaName?: string;
+    /**
+     * Enable strict checking of properties. Throw exception if incoming JSON has odd fields
+     */
+    strictProperty?: boolean;
   }
 
   class JsonParser {
