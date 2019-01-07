@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import { JsonProp } from "../src/decorators";
-import { ParserError } from "../src/errors";
+import { ParserError, KeyError } from "../src/errors";
 import { JsonParser } from "../src/parser";
 import { JsonPropTypes } from "../src/prop_types";
 
@@ -454,6 +454,37 @@ context("Parse", () => {
         }, ParserError);
       });
 
+    });
+
+  });
+
+  context("Check all keys", () => {
+
+    it("Must add details about wrong keys to Error", () => {
+      class Test {
+        @JsonProp({ type: JsonPropTypes.String })
+        public text!: string;
+        @JsonProp({ type: JsonPropTypes.Number })
+        public number!: number;
+        @JsonProp({ type: JsonPropTypes.Boolean })
+        public bool!: number;
+      }
+
+      assert.throws(() => {
+        JsonParser.fromJSON(
+          {
+            text: "Test",
+            bool: 10,
+          },
+          {
+            targetSchema: Test,
+            strictAllKeys: true,
+          });
+      }, (error: KeyError) => {
+        assert.equal(error instanceof KeyError, true);
+        assert.deepEqual(error.keys, ["number", "bool"]);
+        return true;
+      });
     });
 
   });

@@ -1,9 +1,12 @@
-import { JsonError } from "./json_error";
+/// <reference path="../types.d.ts" />
 
-export class ParserError extends JsonError {
+import { IJsonSchema } from "../schema";
+import { TransformError } from "./transform_error";
 
-  constructor(public schemaName: string, message: string, innerError?: Error) {
-    super(`Cannot parse by '${schemaName}' schema. ${message}`, innerError);
+export class ParserError extends TransformError {
+
+  constructor(schema: IJsonSchema, message: string, innerError?: Error) {
+    super(schema, `JSON doesn't match to '${schema.target.name}' schema. ${message}`, innerError);
   }
 
 }

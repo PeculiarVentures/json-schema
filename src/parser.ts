@@ -1,7 +1,8 @@
 /// <reference path="./types.d.ts" />
 
-import { ParserError } from "./errors";
+import { KeyError, ParserError } from "./errors";
 import { isConvertible } from "./helper";
+import { IJsonSchema } from "./schema";
 import { DEFAULT_SCHEMA, schemaStorage } from "./storage";
 import { IJsonNamedSchema, JsonTransform } from "./transform";
 
@@ -12,6 +13,7 @@ export interface IJsonParserOptions<T> {
    * Enable strict checking of properties. Throw exception if incoming JSON has odd fields
    */
   strictProperty?: boolean;
+  strictAllKeys?: boolean;
 }
 
 export class JsonParser extends JsonTransform {
@@ -32,10 +34,11 @@ export class JsonParser extends JsonTransform {
 
     const schema = schemaStorage.get(targetSchema);
     const namedSchema = this.getSchemaByName(schema, schemaName);
+    const keyErrors: { [key: string]: Error } = {};
 
     //#region strictProperty checking
     if (options.strictProperty && !Array.isArray(target)) {
-      JsonParser.checkStrictProperty(target, namedSchema, targetSchema);
+      JsonParser.checkStrictProperty(target, namedSchema, schema);
     }
     //#endregion
 
@@ -51,7 +54,7 @@ export class JsonParser extends JsonTransform {
         }
 
         if (!item.optional && value === undefined) {
-          throw new ParserError(targetSchema.name, `Property '${name}' is required.`);
+          throw new ParserError(schema, `Property '${name}' is required.`);
         }
 
         this.checkTypes(value, item);
@@ -84,15 +87,24 @@ export class JsonParser extends JsonTransform {
           }
         }
       } catch (e) {
-        if (e instanceof ParserError) {
-          throw e;
-        } else {
-          throw new ParserError(
-            schema.target.name,
+        if (!(e instanceof ParserError)) {
+          // Wrap error
+          e = new ParserError(
+            schema,
             `Property '${key}' is wrong. ${e.message}`,
             e);
         }
+        if (options.strictAllKeys) {
+          keyErrors[key] = e;
+        } else {
+          throw e;
+        }
       }
+    }
+
+    const keys = Object.keys(keyErrors);
+    if (keys.length) {
+      throw new KeyError(schema, keys, keyErrors);
     }
 
     return obj;
@@ -102,17 +114,21 @@ export class JsonParser extends JsonTransform {
    * Checks for odd properties in target object.
    * @param target Target object
    * @param namedSchema Named schema with a list of properties
-   * @param targetSchema
+   * @param schema
    * @throws Throws ParserError exception whenever target object has odd property
    */
   // tslint:disable-next-line:max-line-length
-  private static checkStrictProperty(target: any, namedSchema: IJsonNamedSchema, targetSchema: IEmptyConstructor<any> ) {
+  private static checkStrictProperty(target: any, namedSchema: IJsonNamedSchema, schema: IJsonSchema) {
     const jsonProps = Object.keys(target);
     const schemaProps = Object.keys(namedSchema);
+    const keys: string[] = [];
     for (const key of jsonProps) {
       if (schemaProps.indexOf(key) === -1) {
-        throw new ParserError(targetSchema.name, `Incoming JSON has odd property '${key}'`);
+        keys.push(key);
       }
+    }
+    if (keys.length) {
+      throw new KeyError(schema, keys);
     }
   }
 }
