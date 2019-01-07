@@ -13,6 +13,9 @@ export interface IJsonParserOptions<T> {
    * Enable strict checking of properties. Throw exception if incoming JSON has odd fields
    */
   strictProperty?: boolean;
+  /**
+   * Checks all properties for object and throws KeyError with list of wrong keys
+   */
   strictAllKeys?: boolean;
 }
 
