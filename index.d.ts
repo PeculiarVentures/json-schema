@@ -29,7 +29,7 @@ declare namespace JsonSchema {
     /**
      * Defines name of schema
      */
-    schema?: string;
+    schema?: string | string[];
     // string
     /**
      * Defines regular expression for text

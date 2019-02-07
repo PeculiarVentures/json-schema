@@ -458,4 +458,26 @@ context("JsonSerializer", () => {
 
   });
 
+  it("multi schema name", () => {
+
+    class Test {
+      @JsonProp({ type: JsonPropTypes.String, schema: "db" })
+      public id!: string;
+
+      @JsonProp({ type: JsonPropTypes.String, schema: ["db", "web"] })
+      public value!: string;
+    }
+
+    const test = new Test();
+    test.id = "12345";
+    test.value = "Value";
+
+    const dbJson = JsonSerializer.toJSON(test, { schemaName: "db" });
+    assert.deepEqual(dbJson, { id: "12345", value: "Value" });
+
+    const webJson = JsonSerializer.toJSON(test, { schemaName: "web" });
+    assert.deepEqual(webJson, { value: "Value" });
+
+  });
+
 });

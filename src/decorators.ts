@@ -15,7 +15,7 @@ export interface IJsonPropOptions {
   /**
    * Defines name of schema
    */
-  schema?: string;
+  schema?: string | string[];
 
   // string
   /**
@@ -114,10 +114,17 @@ export const JsonProp = (options: IJsonPropOptions = {}) => (target: object, pro
     }
   }
 
-  const schemaName = options.schema || DEFAULT_SCHEMA;
-  if (!schema.names[schemaName]) {
-    schema.names[schemaName] = {};
+  let schemaNames: string[];
+  if (Array.isArray(options.schema)) {
+    schemaNames = options.schema;
+  } else {
+    schemaNames = [options.schema || DEFAULT_SCHEMA];
   }
-  const namedSchema = schema.names[schemaName];
-  namedSchema[propertyKey] = copyOptions;
+  for (const schemaName of schemaNames) {
+    if (!schema.names[schemaName]) {
+      schema.names[schemaName] = {};
+    }
+    const namedSchema = schema.names[schemaName];
+    namedSchema[propertyKey] = copyOptions;
+  }
 };

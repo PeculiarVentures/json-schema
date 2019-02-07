@@ -489,4 +489,26 @@ context("Parse", () => {
 
   });
 
+  it("multi schema name", () => {
+
+    class Test {
+      @JsonProp({ type: JsonPropTypes.String, schema: "db" })
+      public id!: string;
+
+      @JsonProp({ type: JsonPropTypes.String, schema: ["db", "web"] })
+      public value!: string;
+    }
+
+    const json = { id: "12345", value: "Value" };
+
+    const dbTest = JsonParser.fromJSON(json, { schemaName: "db", targetSchema: Test });
+    assert.equal(dbTest.value, "Value");
+    assert.equal(dbTest.id, "12345");
+
+    const webTest = JsonParser.fromJSON(json, { schemaName: "web", targetSchema: Test });
+    assert.equal(webTest.value, "Value");
+    assert.equal(webTest.id, undefined);
+
+  });
+
 });
