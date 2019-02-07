@@ -32,12 +32,12 @@ $ npm install @peculiar/json-schema
 
 Creating a schema:
 ```js
-import {JsonParser, JsonSerializer, JsonProp, JsonPropTypes} from ("@pv/json-schema");
+import { JsonParser, JsonSerializer, JsonProp, JsonPropTypes, IJsonConverter } from "@peculiar/json-schema";
 
 // custom data converter
-const JsonBase64Urlonverter: IJsonConverter<Uint8Array, string> = {
-  parse: (value: string) => base64UrlToBuffer(value),
-  serialize: (value: Uint8Array) => bufferToBase64Url(value),
+const JsonBase64UrlConverter: IJsonConverter<Uint8Array, string> = {
+  fromJSON: (value: string) => base64UrlToBuffer(value),
+  toJSON: (value: Uint8Array) => bufferToBase64Url(value),
 };
 
 class EcPublicKey {
@@ -68,12 +68,12 @@ const json = `{
   "ext": true
 }`;
 
-const ecPubKey = JsonParser.parse(json, EcPublicKey);
+const ecPubKey = JsonParser.parse(json, { targetSchema: EcPublicKey });
 console.log(ecPubKey);
 
 ecPubKey.usages.push("verify");
 
-const jsonText = JsonSerializer.serialize(ecPubKey, undefined, 2);
+const jsonText = JsonSerializer.serialize(ecPubKey, undefined, undefined, 2);
 console.log(jsonText);
 
 // Output
@@ -120,14 +120,14 @@ const json = `{
   ]
 }`;
 
-const person = JsonParser.parse(json, Person);
+const person = JsonParser.parse(json, { targetSchema: Person });
 console.log(person);
 
 const word = new Word();
 word.id = 4;
 word.text = "!!!";
 
-const jsonText = JsonSerializer.serialize(person, undefined, 2);
+const jsonText = JsonSerializer.serialize(person, undefined, undefined, 2);
 console.log(jsonText);
 
 // Output
