@@ -1,5 +1,4 @@
 import typescript from "rollup-plugin-typescript";
-import builtins from "rollup-plugin-node-builtins";
 import cleanup from "rollup-plugin-cleanup";
 
 let pkg = require("./package.json");
@@ -10,7 +9,6 @@ export default {
   plugins: [
     typescript({ typescript: require("typescript"), target: "esnext" }),
     cleanup({ extensions: ["ts"] }),
-    builtins(),
   ],
   external,
   output: [
