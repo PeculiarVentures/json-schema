@@ -18,7 +18,7 @@ commands:
           command: npm install -g tslint@latest
       - run:
           name: install-coveralls
-          command: sudo npm install -g coveralls@latest
+          command: npm install -g coveralls@latest
       - run:
           name: install-nyc
           command: npm install -g nyc@latest
