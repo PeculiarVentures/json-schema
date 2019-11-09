@@ -9,19 +9,19 @@ commands:
       - checkout
       - run:
           name: update-npm
-          command: sudo npm install -g npm@latest
+          command: npm install -g npm@latest
       - run:
           name: install-typescript
-          command: sudo npm install -g typescript@latest
+          command: npm install -g typescript@latest
       - run:
           name: install-tslint
-          command: sudo npm install -g tslint@latest
+          command: npm install -g tslint@latest
       - run:
           name: install-coveralls
           command: sudo npm install -g coveralls@latest
       - run:
           name: install-nyc
-          command: sudo npm install -g nyc@latest
+          command: npm install -g nyc@latest
       - restore_cache: # special step to restore the dependency cache 
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
