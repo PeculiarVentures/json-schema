@@ -1,10 +1,11 @@
 version: 2
-jobs:
-  build:
-    working_directory: ~/mern-starter # directory where steps will run
-    docker: # run the steps with Docker
-      - image: circleci/node:8.11.3
+
+commands:
+  test-nodejs:
     steps:
+      - run:
+        name: Versions
+        command: node version
       - checkout
       - run:
           name: update-npm
@@ -39,3 +40,27 @@ jobs:
       - run: # run coveralls report
           name: test-report-coveralls
           command: npm run coveralls
+
+jobs:
+  node-v8:
+    docker:
+      - image: node:8
+    steps:
+      - test-nodejs
+  node-v10:
+    docker:
+      - image: node:10
+    steps:
+      - test-nodejs
+  node-v12:
+    docker:
+      - image: node:12
+    steps:
+      - test-nodejs
+
+workflows:
+  node-multi-build:
+    jobs:
+      - node-v8
+      - node-v10
+      - node-v12
