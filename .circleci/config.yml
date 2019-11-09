@@ -4,12 +4,12 @@ commands:
   test-nodejs:
     steps:
       - run:
-        name: Versions
-        command: node version
+          name: Versions
+          command: node version
       - checkout
       - run:
           name: update-npm
-          command: 'sudo npm install -g npm@latest'
+          command: sudo npm install -g npm@latest
       - run:
           name: install-typescript
           command: sudo npm install -g typescript@latest
