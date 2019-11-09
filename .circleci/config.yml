@@ -1,26 +1,27 @@
-version: 2
-jobs:
-  build:
-    working_directory: ~/mern-starter # directory where steps will run
-    docker: # run the steps with Docker
-      - image: circleci/node:8.11.3
+version: 2.1
+
+commands:
+  test-nodejs:
     steps:
+      - run:
+          name: Versions
+          command: node -v
       - checkout
       - run:
           name: update-npm
-          command: 'sudo npm install -g npm@latest'
+          command: npm install -g npm@latest
       - run:
           name: install-typescript
-          command: sudo npm install -g typescript@latest
+          command: npm install -g typescript@latest
       - run:
           name: install-tslint
-          command: sudo npm install -g tslint@latest
+          command: npm install -g tslint@latest
       - run:
           name: install-coveralls
-          command: sudo npm install -g coveralls@latest
+          command: npm install -g coveralls@latest
       - run:
           name: install-nyc
-          command: sudo npm install -g nyc@latest
+          command: npm install -g nyc@latest
       - restore_cache: # special step to restore the dependency cache 
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -36,6 +37,31 @@ jobs:
       - run: # run tests with code coverage
           name: test-code-coverage
           command: npm run coverage
+
+jobs:
+  node-v8:
+    docker:
+      - image: node:8
+    steps:
+      - test-nodejs
+  node-v10:
+    docker:
+      - image: node:10
+    steps:
+      - test-nodejs
+  node-v12:
+    docker:
+      - image: node:12
+    steps:
+      - test-nodejs
       - run: # run coveralls report
           name: test-report-coveralls
           command: npm run coveralls
+
+workflows:
+  version: 2
+  node-multi-build:
+    jobs:
+      - node-v8
+      - node-v10
+      - node-v12
