@@ -5,7 +5,7 @@ commands:
     steps:
       - run:
           name: Versions
-          command: node version
+          command: node -v
       - checkout
       - run:
           name: update-npm
