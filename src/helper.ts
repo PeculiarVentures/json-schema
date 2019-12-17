@@ -1,6 +1,5 @@
-/// <reference path="./types.d.ts" />
-
 import { JsonPropTypes } from "./prop_types";
+import { IJsonConvertible } from "./types";
 
 export function checkType(value: any, type: JsonPropTypes) {
   switch (type) {

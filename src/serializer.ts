@@ -2,6 +2,7 @@ import { JsonError, SerializerError } from "./errors";
 import { isConvertible } from "./helper";
 import { DEFAULT_SCHEMA, schemaStorage } from "./storage";
 import { JsonTransform } from "./transform";
+import { IEmptyConstructor } from "./types";
 
 export interface IJsonSerializerOptions {
   targetSchema?: IEmptyConstructor<any>;

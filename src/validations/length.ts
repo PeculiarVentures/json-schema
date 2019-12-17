@@ -1,6 +1,5 @@
-/// <reference path="../types.d.ts" />
-
 import { ValidationError } from "../errors/validation_error";
+import { IValidation } from "../types";
 
 export class LengthValidation implements IValidation {
 

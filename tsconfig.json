@@ -7,5 +7,8 @@
     "strict": true,
     "esModuleInterop": true,
     "experimentalDecorators": true
-  }
+  },
+  "exclude": [
+    "build"
+  ]
 }

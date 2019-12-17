@@ -1,8 +1,7 @@
-/// <reference path="../types.d.ts" />
-
 import { ValidationError } from "../errors/validation_error";
 import { throwIfTypeIsWrong } from "../helper";
 import { JsonPropTypes } from "../prop_types";
+import { IValidation } from "../types";
 
 export class InclusiveValidation implements IValidation {
 

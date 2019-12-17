@@ -1,7 +1,6 @@
-/// <reference path="../src/types.d.ts" />
-
 import * as assert from "assert";
 import { isConvertible } from "../src/helper";
+import { IJsonConvertible } from "../src/types";
 
 context("helper", () => {
   context("isConvertible", () => {

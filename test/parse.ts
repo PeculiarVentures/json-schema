@@ -3,6 +3,7 @@ import { JsonProp } from "../src/decorators";
 import { KeyError, ParserError } from "../src/errors";
 import { JsonParser } from "../src/parser";
 import { JsonPropTypes } from "../src/prop_types";
+import { IJsonConverter, IJsonConvertible } from "../src/types";
 
 const CustomNumberConverter: IJsonConverter<number, string> = {
   fromJSON: (value: string) => parseInt(value, 10),

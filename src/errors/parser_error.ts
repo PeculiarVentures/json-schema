@@ -1,5 +1,3 @@
-/// <reference path="../types.d.ts" />
-
 import { IJsonSchema } from "../schema";
 import { TransformError } from "./transform_error";
 

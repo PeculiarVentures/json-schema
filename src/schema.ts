@@ -1,6 +1,5 @@
-/// <reference path="./types.d.ts" />
-
 import { JsonPropTypes } from "./prop_types";
+import { IEmptyConstructor, IJsonConverter, IValidation } from "./types";
 
 export interface IValidationEvent {
   propName: string;
