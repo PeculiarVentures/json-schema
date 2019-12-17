@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import { JsonProp } from "../src/decorators";
-import { ParserError, KeyError } from "../src/errors";
+import { KeyError, ParserError } from "../src/errors";
 import { JsonParser } from "../src/parser";
 import { JsonPropTypes } from "../src/prop_types";
 
