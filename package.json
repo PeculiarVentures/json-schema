@@ -84,5 +84,10 @@
       "text-summary",
       "html"
     ]
+  },
+  "mocha": {
+    "require": "ts-node/register",
+    "extension": ["ts"],
+    "watch-files": "test/**/*.ts"
   }
 }
