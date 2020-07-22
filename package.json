@@ -1,6 +1,6 @@
 {
   "name": "@peculiar/json-schema",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "This package uses ES2015 decorators to simplify JSON schema creation and use",
   "main": "build/index.js",
   "module": "build/index.es.js",
