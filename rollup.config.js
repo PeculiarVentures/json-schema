@@ -7,7 +7,7 @@ let banner = [
   ` * Copyright (c) ${new Date().getFullYear()}, Peculiar Ventures, All rights reserved.`,
   " */",
   "",
-]
+].join("\n");
 
 export default {
   input: "src/index.ts",
