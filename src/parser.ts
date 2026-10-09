@@ -62,7 +62,7 @@ export class JsonParser extends JsonTransform {
         this.checkTypes(value, item);
         this.checkValues(value, item);
 
-        if (typeof (item.type) === "number") {
+        if (typeof item.type === "number") {
           // PRIMITIVE
           if (item.converter) {
             if (item.repeated) {
@@ -89,17 +89,15 @@ export class JsonParser extends JsonTransform {
           }
         }
       } catch (e) {
-        if (!(e instanceof ParserError)) {
+        let error = e;
+        if (!(error instanceof ParserError)) {
           // Wrap error
-          e = new ParserError(
-            schema,
-            `Property '${key}' is wrong. ${e.message}`,
-            e);
+          error = new ParserError(schema, `Property '${key}' is wrong. ${error.message}`, error);
         }
         if (options.strictAllKeys) {
-          keyErrors[key] = e;
+          keyErrors[key] = error;
         } else {
-          throw e;
+          throw error;
         }
       }
     }

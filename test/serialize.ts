@@ -11,7 +11,6 @@ const CustomNumberConverter: IJsonConverter<number, string> = {
 };
 
 context("JsonSerializer", () => {
-
   context("primitives", () => {
     it("default schema", () => {
       class Test {
@@ -127,7 +126,6 @@ context("JsonSerializer", () => {
 
     context("validations", () => {
       context("pattern", () => {
-
         class Test {
           @JsonProp({ pattern: "^[0-9]{6}$" })
           public text!: string;
@@ -154,19 +152,18 @@ context("JsonSerializer", () => {
   });
 
   context("constructed", () => {
-
     it("don't throw error if type has toJSON/fromJSON methods", () => {
       // assert.doesNotThrow(() => {
       class Child implements IJsonConvertible {
         public value = 2;
-        public fromJSON(json: any): this {
+        public fromJSON(_json: any): this {
           throw new Error("Method not implemented.");
         }
         public toJSON() {
           throw new Error("Method not implemented.");
         }
       }
-      class Test {
+      class _Test {
         @JsonProp({ type: Child })
         public child = new Child();
       }
@@ -177,7 +174,7 @@ context("JsonSerializer", () => {
         class Child {
           public value = 2;
         }
-        class Test {
+        class _Test {
           @JsonProp({ type: Child })
           public child = new Child();
         }
@@ -215,11 +212,7 @@ context("JsonSerializer", () => {
       }
       class Test {
         @JsonProp({ type: Child, repeated: true })
-        public children = [
-          new Child(1),
-          new Child(2),
-          new Child(3),
-        ];
+        public children = [new Child(1), new Child(2), new Child(3)];
 
         public odd = 1;
       }
@@ -343,10 +336,13 @@ context("JsonSerializer", () => {
         }
       }
 
-      const json = JsonSerializer.serialize({
-        createdAt: new Date(10000),
-        value: "text",
-      }, { targetSchema: Test });
+      const json = JsonSerializer.serialize(
+        {
+          createdAt: new Date(10000),
+          value: "text",
+        },
+        { targetSchema: Test },
+      );
 
       assert.equal(json, `{"createdAt":"1970-01-01T00:00:10.000Z","value":"text"}`);
     });
@@ -370,9 +366,12 @@ context("JsonSerializer", () => {
       }
 
       assert.throws(() => {
-        JsonSerializer.serialize({
-          createdAt: new Date(10000),
-        }, { targetSchema: Test });
+        JsonSerializer.serialize(
+          {
+            createdAt: new Date(10000),
+          },
+          { targetSchema: Test },
+        );
       });
     });
     it("throw error for bad target schema", () => {
@@ -388,15 +387,17 @@ context("JsonSerializer", () => {
       }
 
       assert.throws(() => {
-        JsonSerializer.serialize({
-          createdAt: new Date(10000),
-        }, { targetSchema: Test });
+        JsonSerializer.serialize(
+          {
+            createdAt: new Date(10000),
+          },
+          { targetSchema: Test },
+        );
       });
     });
   });
 
   context("schema name", () => {
-
     class Child {
       @JsonProp({ name: "name" })
       @JsonProp({ name: "n", schema: "short" })
@@ -456,11 +457,9 @@ context("JsonSerializer", () => {
         type: "Type",
       });
     });
-
   });
 
   it("multi schema name", () => {
-
     class Test {
       @JsonProp({ type: JsonPropTypes.String, schema: "db" })
       public id!: string;
@@ -478,7 +477,5 @@ context("JsonSerializer", () => {
 
     const webJson = JsonSerializer.toJSON(test, { schemaName: "web" });
     assert.deepEqual(webJson, { value: "Value" });
-
   });
-
 });

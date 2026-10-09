@@ -7,30 +7,30 @@
 
 [![NPM](https://nodei.co/npm/@peculiar/json-schema.png)](https://nodei.co/npm/@peculiar/json-schema/)
 
-This package uses ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON [schema creation and use](https://json-schema.org/understanding-json-schema/index.html). 
-
+This package uses ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON [schema creation and use](https://json-schema.org/understanding-json-schema/index.html).
 
 ## Introduction
 
 JSON (JavaScript Object Notation) is a lightweight data-interchange format that was designed to be easy for humans to read and write but in practice, it is [minefield](http://seriot.ch/parsing_json.html) when it machines need to parse it.
 
-While the use of schemas can help with this problem their use can be complicated. When using `json-schema` this is addressed by using decorators to make both serialization and parsing of XML possible via a simple class that handles the schemas for you.  
+While the use of schemas can help with this problem their use can be complicated. When using `json-schema` this is addressed by using decorators to make both serialization and parsing of XML possible via a simple class that handles the schemas for you.
 
-This is important because validating input data before its use is important to do because all input data is evil. Using a schema helps you handle this data [safely](https://www.whitehatsec.com/blog/handling-untrusted-json-safely/). 
-
+This is important because validating input data before its use is important to do because all input data is evil. Using a schema helps you handle this data [safely](https://www.whitehatsec.com/blog/handling-untrusted-json-safely/).
 
 ## Installation
 
-Installation is handled via  `npm`:
+Installation is handled via `npm`:
 
 ```
 $ npm install @peculiar/json-schema
 ```
 
 ## Examples
+
 ### Node.js
 
 Creating a schema:
+
 ```js
 import { JsonParser, JsonSerializer, JsonProp, JsonPropTypes, IJsonConverter } from "@peculiar/json-schema";
 
@@ -93,6 +93,7 @@ console.log(jsonText);
 ```
 
 Extending a Schema:
+
 ```js
 class BaseObject {
   @JsonProp({ name: "i" })

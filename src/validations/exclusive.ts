@@ -4,9 +4,10 @@ import { JsonPropTypes } from "../prop_types";
 import { IValidation } from "../types";
 
 export class ExclusiveValidation implements IValidation {
-
-  constructor(private min: number = Number.MIN_VALUE, private max: number = Number.MAX_VALUE) {
-  }
+  constructor(
+    private min: number = Number.MIN_VALUE,
+    private max: number = Number.MAX_VALUE,
+  ) {}
 
   public validate(value: any): void {
     throwIfTypeIsWrong(value, JsonPropTypes.Number);
@@ -16,7 +17,5 @@ export class ExclusiveValidation implements IValidation {
       const max = this.max === Number.MAX_VALUE ? "MAX" : this.max;
       throw new ValidationError(`Value doesn't match to diapason (${min},${max})`);
     }
-
   }
-
 }

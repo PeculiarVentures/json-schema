@@ -2,7 +2,6 @@ import { ValidationError } from "../errors/validation_error";
 import { IValidation } from "../types";
 
 export class PatternValidation implements IValidation {
-
   private pattern: RegExp;
 
   constructor(pattern: string | RegExp) {
@@ -19,5 +18,4 @@ export class PatternValidation implements IValidation {
       throw new ValidationError(`Value doesn't match to pattern '${pattern.toString()}'`);
     }
   }
-
 }

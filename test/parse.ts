@@ -11,7 +11,6 @@ const CustomNumberConverter: IJsonConverter<number, string> = {
 };
 
 context("Parse", () => {
-
   context("primitives", () => {
     it("default schema", () => {
       class Test {
@@ -116,11 +115,14 @@ context("Parse", () => {
         }
 
         assert.throws(() => {
-          JsonParser.fromJSON({
-            values: "not Array",
-          }, {
+          JsonParser.fromJSON(
+            {
+              values: "not Array",
+            },
+            {
               targetSchema: Test,
-            });
+            },
+          );
         });
       });
     });
@@ -208,11 +210,8 @@ context("Parse", () => {
       });
     });
     context("validations", () => {
-
       context("pattern", () => {
-
         context("RegExp type", () => {
-
           class Test {
             @JsonProp({ pattern: /[0-9]{6}/ })
             public text!: string;
@@ -255,11 +254,8 @@ context("Parse", () => {
               });
             });
           });
-
         });
-
       });
-
     });
   });
 
@@ -318,7 +314,6 @@ context("Parse", () => {
   });
 
   context("schema name", () => {
-
     class Child {
       @JsonProp({ name: "name" })
       @JsonProp({ name: "n", schema: "short" })
@@ -399,13 +394,10 @@ context("Parse", () => {
         type: "Type_new",
       });
     });
-
   });
 
   context("Strict checking", () => {
-
     context("strictProperty", () => {
-
       it("option is disabled by default", () => {
         class Test {
           @JsonProp()
@@ -442,10 +434,7 @@ context("Parse", () => {
         assert.throws(() => {
           JsonParser.fromJSON(
             {
-              items: [
-                { value: "test1" },
-                { value: "test2", odd: 1 },
-              ],
+              items: [{ value: "test1" }, { value: "test2", odd: 1 }],
             },
             {
               targetSchema: TestArray,
@@ -454,13 +443,10 @@ context("Parse", () => {
           );
         }, ParserError);
       });
-
     });
-
   });
 
   context("Check all keys", () => {
-
     it("Must add details about wrong keys to Error", () => {
       class Test {
         @JsonProp({ type: JsonPropTypes.String })
@@ -471,27 +457,29 @@ context("Parse", () => {
         public bool!: number;
       }
 
-      assert.throws(() => {
-        JsonParser.fromJSON(
-          {
-            text: "Test",
-            bool: 10,
-          },
-          {
-            targetSchema: Test,
-            strictAllKeys: true,
-          });
-      }, (error: KeyError) => {
-        assert.equal(error instanceof KeyError, true);
-        assert.deepEqual(error.keys, ["number", "bool"]);
-        return true;
-      });
+      assert.throws(
+        () => {
+          JsonParser.fromJSON(
+            {
+              text: "Test",
+              bool: 10,
+            },
+            {
+              targetSchema: Test,
+              strictAllKeys: true,
+            },
+          );
+        },
+        (error: KeyError) => {
+          assert.equal(error instanceof KeyError, true);
+          assert.deepEqual(error.keys, ["number", "bool"]);
+          return true;
+        },
+      );
     });
-
   });
 
   it("multi schema name", () => {
-
     class Test {
       @JsonProp({ type: JsonPropTypes.String, schema: "db" })
       public id!: string;
@@ -509,7 +497,5 @@ context("Parse", () => {
     const webTest = JsonParser.fromJSON(json, { schemaName: "web", targetSchema: Test });
     assert.equal(webTest.value, "Value");
     assert.equal(webTest.id, undefined);
-
   });
-
 });

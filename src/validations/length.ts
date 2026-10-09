@@ -2,9 +2,11 @@ import { ValidationError } from "../errors/validation_error";
 import { IValidation } from "../types";
 
 export class LengthValidation implements IValidation {
-
-  constructor(private length?: number, private minLength?: number, private maxLength?: number) {
-  }
+  constructor(
+    private length?: number,
+    private minLength?: number,
+    private maxLength?: number,
+  ) {}
 
   public validate(value: any): void {
     if (this.length !== undefined) {
@@ -23,7 +25,5 @@ export class LengthValidation implements IValidation {
         throw new ValidationError(`Value length must be less than ${this.maxLength}.`);
       }
     }
-
   }
-
 }

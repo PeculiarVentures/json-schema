@@ -8,7 +8,6 @@ export interface IJsonNamedSchema {
 }
 
 export class JsonTransform {
-
   protected static checkValues(data: any, schemaItem: IJsonSchemaItem) {
     const values = Array.isArray(data) ? data : [data];
     for (const value of values) {
@@ -37,5 +36,4 @@ export class JsonTransform {
   protected static getSchemaByName(schema: IJsonSchema, name: string = DEFAULT_SCHEMA): IJsonNamedSchema {
     return { ...schema.names[DEFAULT_SCHEMA], ...schema.names[name] };
   }
-
 }
