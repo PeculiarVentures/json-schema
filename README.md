@@ -1,11 +1,16 @@
-# JSON-SCHEMA
+<h1 align="center">
+  @peculiar/json-schema
+</h1>
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/PeculiarVentures/json-schema/master/LICENSE.md)
-[![CircleCI](https://circleci.com/gh/PeculiarVentures/json-schema.svg?style=svg)](https://circleci.com/gh/PeculiarVentures/json-schema)
-[![Coverage Status](https://coveralls.io/repos/github/PeculiarVentures/json-schema/badge.svg?branch=master&t=ddJivl)](https://coveralls.io/github/PeculiarVentures/json-schema?branch=master)
-[![npm version](https://badge.fury.io/js/%40peculiar%2Fjson-schema.svg)](https://badge.fury.io/js/%40peculiar%2Fjson-schema)
+<div align="center">
 
-[![NPM](https://nodei.co/npm/@peculiar/json-schema.png)](https://nodei.co/npm/@peculiar/json-schema/)
+![NPM License](https://img.shields.io/npm/l/@peculiar/json-schema)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/PeculiarVentures/json-schema/test.yml?label=test)
+[![npm version](https://img.shields.io/npm/v/@peculiar/json-schema.svg)](https://www.npmjs.com/package/@peculiar/json-schema)
+![Coveralls](https://img.shields.io/coverallsCoverage/github/PeculiarVentures/json-schema)
+[![npm downloads](https://img.shields.io/npm/dm/@peculiar/json-schema.svg)](https://www.npmjs.com/package/@peculiar/json-schema)
+
+</div>
 
 This package uses ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON [schema creation and use](https://json-schema.org/understanding-json-schema/index.html).
 
