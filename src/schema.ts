@@ -26,7 +26,6 @@ export interface IJsonSchema {
 }
 
 export class JsonSchemaStorage {
-
   protected items = new Map<object, IJsonSchema>();
 
   public has(target: object) {
@@ -77,5 +76,4 @@ export class JsonSchemaStorage {
     }
     return null;
   }
-
 }

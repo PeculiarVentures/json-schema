@@ -6,7 +6,7 @@ context("helper", () => {
   context("isConvertible", () => {
     it("true", () => {
       class Test implements IJsonConvertible {
-        public fromJSON(json: any): this {
+        public fromJSON(_json: any): this {
           throw new Error("Method not implemented.");
         }
         public toJSON() {

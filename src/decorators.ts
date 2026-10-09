@@ -87,45 +87,47 @@ function getValidations(item: IJsonPropOptions) {
   return validations;
 }
 
-export const JsonProp = (options: IJsonPropOptions = {}) => (target: object, propertyKey: string) => {
-  const errorMessage = `Cannot set type for ${propertyKey} property of ${target.constructor.name} schema`;
-  let schema: IJsonSchema;
-  if (!schemaStorage.has(target.constructor)) {
-    schema = schemaStorage.create(target.constructor);
-    schemaStorage.set(target.constructor, schema);
-  } else {
-    schema = schemaStorage.get(target.constructor);
-    if (schema.target !== target.constructor) {
+export const JsonProp =
+  (options: IJsonPropOptions = {}) =>
+  (target: object, propertyKey: string) => {
+    const errorMessage = `Cannot set type for ${propertyKey} property of ${target.constructor.name} schema`;
+    let schema: IJsonSchema;
+    if (!schemaStorage.has(target.constructor)) {
       schema = schemaStorage.create(target.constructor);
       schemaStorage.set(target.constructor, schema);
+    } else {
+      schema = schemaStorage.get(target.constructor);
+      if (schema.target !== target.constructor) {
+        schema = schemaStorage.create(target.constructor);
+        schemaStorage.set(target.constructor, schema);
+      }
     }
-  }
 
-  const defaultSchema: IJsonSchemaItem = {
-    type: JsonPropTypes.Any,
-    validations: [],
+    const defaultSchema: IJsonSchemaItem = {
+      type: JsonPropTypes.Any,
+      validations: [],
+    };
+    const copyOptions = Object.assign(defaultSchema, options) as IJsonSchemaItem;
+    copyOptions.validations = getValidations(copyOptions);
+
+    if (typeof copyOptions.type !== "number") {
+      // CONSTRUCTED
+      if (!schemaStorage.has(copyOptions.type) && !isConvertible(copyOptions.type)) {
+        throw new Error(`${errorMessage}. Assigning type doesn't have schema.`);
+      }
+    }
+
+    let schemaNames: string[];
+    if (Array.isArray(options.schema)) {
+      schemaNames = options.schema;
+    } else {
+      schemaNames = [options.schema || DEFAULT_SCHEMA];
+    }
+    for (const schemaName of schemaNames) {
+      if (!schema.names[schemaName]) {
+        schema.names[schemaName] = {};
+      }
+      const namedSchema = schema.names[schemaName];
+      namedSchema[propertyKey] = copyOptions;
+    }
   };
-  const copyOptions = Object.assign(defaultSchema, options) as IJsonSchemaItem;
-  copyOptions.validations = getValidations(copyOptions);
-
-  if (typeof copyOptions.type !== "number") {
-    // CONSTRUCTED
-    if (!schemaStorage.has(copyOptions.type) && !isConvertible(copyOptions.type)) {
-      throw new Error(`${errorMessage}. Assigning type doesn't have schema.`);
-    }
-  }
-
-  let schemaNames: string[];
-  if (Array.isArray(options.schema)) {
-    schemaNames = options.schema;
-  } else {
-    schemaNames = [options.schema || DEFAULT_SCHEMA];
-  }
-  for (const schemaName of schemaNames) {
-    if (!schema.names[schemaName]) {
-      schema.names[schemaName] = {};
-    }
-    const namedSchema = schema.names[schemaName];
-    namedSchema[propertyKey] = copyOptions;
-  }
-};

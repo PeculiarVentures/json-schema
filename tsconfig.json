@@ -8,7 +8,5 @@
     "esModuleInterop": true,
     "experimentalDecorators": true
   },
-  "exclude": [
-    "build"
-  ]
+  "exclude": ["build"]
 }

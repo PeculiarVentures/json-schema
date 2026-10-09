@@ -1,4 +1,4 @@
-export type IEmptyConstructor<T> = new() => T;
+export type IEmptyConstructor<T> = new () => T;
 
 export interface IJsonConverter<T, S> {
   fromJSON(value: S, target: any): T;

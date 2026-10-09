@@ -6,9 +6,11 @@ export interface IKeyErrors {
 }
 
 export class KeyError extends ParserError {
-
-  constructor(schema: IJsonSchema, public keys: string[], public errors: IKeyErrors = {}) {
+  constructor(
+    schema: IJsonSchema,
+    public keys: string[],
+    public errors: IKeyErrors = {},
+  ) {
     super(schema, "Some keys doesn't match to schema");
   }
-
 }

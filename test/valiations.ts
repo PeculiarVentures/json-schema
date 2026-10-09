@@ -24,9 +24,7 @@ function testValidationWrong(obj: any, json: string) {
 }
 
 context("Validations", () => {
-
   context("pattern", () => {
-
     class Test {
       @JsonProp({ pattern: /[0-9]{6}/ })
       public value!: string;
@@ -43,11 +41,9 @@ context("Validations", () => {
     it("wrong", () => {
       testValidationWrong(new Test("01020"), `{"value":"01020"}`);
     });
-
   });
 
   context("length", () => {
-
     context("string", () => {
       class Test {
         @JsonProp({ length: 6 })
@@ -85,11 +81,9 @@ context("Validations", () => {
         testValidationWrong(new Test([1, 2, 3, 4, 5]), `{"value":[1,2,3,4,5]}`);
       });
     });
-
   });
 
   context("max length", () => {
-
     context("string", () => {
       class Test {
         @JsonProp({ maxLength: 6 })
@@ -127,11 +121,9 @@ context("Validations", () => {
         testValidationWrong(new Test([1, 2, 3, 4, 5, 6, 7]), `{"value":[1,2,3,4,5,6,7]}`);
       });
     });
-
   });
 
   context("min length", () => {
-
     context("string", () => {
       class Test {
         @JsonProp({ minLength: 3 })
@@ -169,11 +161,9 @@ context("Validations", () => {
         testValidationWrong(new Test([1, 2]), `{"value":[1,2]}`);
       });
     });
-
   });
 
   context("enum", () => {
-
     class Test {
       @JsonProp({ enumeration: ["val1", "val2"] })
       public value: "val1" | "val2" | string;
@@ -190,11 +180,9 @@ context("Validations", () => {
     it("wrong", () => {
       testValidationWrong(new Test("val3"), `{"value":"val3"}`);
     });
-
   });
 
   context("exclusive", () => {
-
     class Test {
       @JsonProp({ type: JsonPropTypes.Number, minExclusive: 1, maxExclusive: 3 })
       public value: number = 0;
@@ -239,11 +227,9 @@ context("Validations", () => {
       }
       testValidationWrong(new TestMin(1), `{"value":1}`);
     });
-
   });
 
   context("inclusive", () => {
-
     class Test {
       @JsonProp({ type: JsonPropTypes.Number, minInclusive: 1, maxInclusive: 3 })
       public value: number = 0;
@@ -292,7 +278,5 @@ context("Validations", () => {
       }
       testValidationWrong(new TestMin(0), `{"value":0}`);
     });
-
   });
-
 });

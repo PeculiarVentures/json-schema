@@ -1,4 +1,3 @@
 import { JsonError } from "./json_error";
 
-export class ValidationError extends JsonError {
-}
+export class ValidationError extends JsonError {}

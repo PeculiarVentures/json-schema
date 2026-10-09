@@ -50,8 +50,7 @@ export class JsonSerializer extends JsonTransform {
             let value: any;
 
             // DEFAULT VALUE || OPTIONAL
-            if ((item.optional && objItem === undefined)
-              || (item.defaultValue !== undefined && objItem === item.defaultValue)) {
+            if ((item.optional && objItem === undefined) || (item.defaultValue !== undefined && objItem === item.defaultValue)) {
               // skip value
               continue;
             }
@@ -92,10 +91,7 @@ export class JsonSerializer extends JsonTransform {
             if (e instanceof SerializerError) {
               throw e;
             } else {
-              throw new SerializerError(
-                schema.target.name,
-                `Property '${key}' is wrong. ${e.message}`,
-                e);
+              throw new SerializerError(schema.target.name, `Property '${key}' is wrong. ${e.message}`, e);
             }
           }
         }
@@ -112,5 +108,4 @@ export class JsonSerializer extends JsonTransform {
 
     return res;
   }
-
 }

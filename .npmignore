@@ -3,6 +3,8 @@ test/
 src/
 
 # config files
+.oxfmtrc.json
+.oxlintrc.json
 rollup.config.js
 ts*.json
 
@@ -12,3 +14,4 @@ coverage/
 
 # ci
 .circleci
+.github

@@ -8,20 +8,22 @@
   "scripts": {
     "test": "mocha",
     "prepare": "npm run build",
-    "lint": "tslint -p .",
-    "lint:fix": "tslint --fix -p .",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "build": "npm run build:module && npm run build:types",
     "build:module": "rollup -c",
     "build:types": "tsc -p tsconfig.types.json",
     "clear": "rimraf build/*",
     "rebuild": "npm run clear && npm run build",
-    "prepub": "npm run lint && npm run build",
+    "prepub": "npm run lint && npm run format:check && npm run build",
     "pub": "npm version patch && npm publish",
     "postpub": "git push && git push --tags origin master",
-    "prepub:next": "npm run lint && npm run build",
+    "prepub:next": "npm run lint && npm run format:check && npm run build",
     "pub:next": "npm version prerelease --preid=next && npm publish --tag next",
     "postpub:next": "git push",
-    "coverage": "nyc npm test"
+    "coverage": "nyc npm test",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check"
   },
   "repository": {
     "type": "git",
@@ -59,11 +61,12 @@
     "@types/node": "^12.12.51",
     "mocha": "^8.0.1",
     "nyc": "^17.1.0",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.22.2",
     "rollup-plugin-typescript2": "^0.27.1",
     "ts-node": "^8.10.2",
-    "tslint": "^6.1.2",
     "typescript": "^3.9.7"
   },
   "dependencies": {
