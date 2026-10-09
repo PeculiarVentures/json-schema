@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -47,7 +47,7 @@ jobs:
           esac
 
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: check
     if: needs.check.outputs.release == 'true'
     environment: npm
