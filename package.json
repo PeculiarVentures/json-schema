@@ -6,7 +6,7 @@
   "module": "build/index.es.js",
   "types": "build/types/index.d.ts",
   "scripts": {
-    "test": "mocha",
+    "test": "vitest run",
     "prepare": "npm run build",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
@@ -21,7 +21,8 @@
     "prepub:next": "npm run lint && npm run format:check && npm run build",
     "pub:next": "npm version prerelease --preid=next && npm publish --tag next",
     "postpub:next": "git push",
-    "coverage": "nyc npm test",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
     "format": "oxfmt",
     "format:check": "oxfmt --check"
   },
@@ -57,43 +58,17 @@
     "node": ">=8.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "^8.0.0",
-    "@types/node": "^12.12.51",
-    "mocha": "^8.0.1",
-    "nyc": "^17.1.0",
+    "@types/node": "^22.20.5",
+    "@vitest/coverage-v8": "^4.1.11",
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.22.2",
-    "rollup-plugin-typescript2": "^0.27.1",
-    "ts-node": "^8.10.2",
-    "typescript": "^3.9.7"
+    "rollup": "^2.80.0",
+    "rollup-plugin-typescript2": "^0.37.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.11"
   },
   "dependencies": {
     "tslib": "^2.0.0"
-  },
-  "nyc": {
-    "extension": [
-      ".ts",
-      ".tsx"
-    ],
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "**/*.d.ts"
-    ],
-    "reporter": [
-      "text-summary",
-      "html",
-      "lcov"
-    ]
-  },
-  "mocha": {
-    "require": "ts-node/register",
-    "extension": [
-      "ts"
-    ],
-    "watch-files": "test/**/*.ts"
   }
 }

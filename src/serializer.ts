@@ -87,7 +87,7 @@ export class JsonSerializer extends JsonTransform {
             this.checkValues(value, item);
 
             res[item.name || key] = value;
-          } catch (e) {
+          } catch (e: any) {
             if (e instanceof SerializerError) {
               throw e;
             } else {

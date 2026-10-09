@@ -1,15 +1,14 @@
 .vscode/
-test/
 src/
 
 # config files
 .oxfmtrc.json
 .oxlintrc.json
 rollup.config.js
+vitest.config.mts
 ts*.json
 
 # coverage
-.nyc_output/
 coverage/
 
 # ci
