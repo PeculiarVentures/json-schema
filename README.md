@@ -12,34 +12,42 @@
 
 </div>
 
-This package uses ES2015 [decorators](https://medium.com/google-developers/exploring-es7-decorators-76ecb65fb841) to simplify JSON [schema creation and use](https://json-schema.org/understanding-json-schema/index.html).
+Serialize and parse JSON with TypeScript classes. Describe the schema once with the `@JsonProp` decorator, and the library maps property names, converts values and validates input in both directions.
 
 ## Introduction
 
-JSON (JavaScript Object Notation) is a lightweight data-interchange format that was designed to be easy for humans to read and write but in practice, it is [minefield](http://seriot.ch/parsing_json.html) when it machines need to parse it.
+JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and write, but in practice it is a [minefield](https://seriot.ch/projects/parsing_json.html) when machines need to parse it.
 
-While the use of schemas can help with this problem their use can be complicated. When using `json-schema` this is addressed by using decorators to make both serialization and parsing of XML possible via a simple class that handles the schemas for you.
+Schemas help, but they can be complicated to use. `@peculiar/json-schema` addresses this with decorators: you annotate a class, and the library handles serialization, parsing and validation of JSON for you.
 
-This is important because validating input data before its use is important to do because all input data is evil. Using a schema helps you handle this data [safely](https://www.whitehatsec.com/blog/handling-untrusted-json-safely/).
+All input data is untrusted, so it should be validated before use. Parsing into a schema gives you a typed object or a descriptive error.
 
 ## Installation
 
-Installation is handled via `npm`:
-
+```sh
+npm install @peculiar/json-schema
 ```
-$ npm install @peculiar/json-schema
+
+The package ships both ESM and CommonJS builds with TypeScript declarations, and requires Node.js 16 or later.
+
+`@JsonProp` is a TypeScript legacy (experimental) decorator. Enable it in your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "experimentalDecorators": true
+  }
+}
 ```
 
 ## Examples
 
-### Node.js
+### Creating a schema
 
-Creating a schema:
-
-```js
+```ts
 import { JsonParser, JsonSerializer, JsonProp, JsonPropTypes, IJsonConverter } from "@peculiar/json-schema";
 
-// custom data converter
+// Custom data converter
 const JsonBase64UrlConverter: IJsonConverter<Uint8Array, string> = {
   fromJSON: (value: string) => base64UrlToBuffer(value),
   toJSON: (value: Uint8Array) => bufferToBase64Url(value),
@@ -88,8 +96,8 @@ console.log(jsonText);
 // {
 //   "kty": "EC",
 //   "crv": "P-256",
-//   "x": "zCQ5BPHPCLZYgdpo1n+x/90P2Ij52d53YVwTh3ZdiMo=",
-//   "y": "pDfQTUx0+OiZc5ZuKMcA7v2Q7ZPKsQwzB58bft0JTko=",
+//   "x": "zCQ5BPHPCLZYgdpo1n-x_90P2Ij52d53YVwTh3ZdiMo",
+//   "y": "pDfQTUx0-OiZc5ZuKMcA7v2Q7ZPKsQwzB58bft0JTko",
 //   "ext": true,
 //   "key_ops": [
 //     "verify"
@@ -97,9 +105,13 @@ console.log(jsonText);
 // }
 ```
 
-Extending a Schema:
+`base64UrlToBuffer` and `bufferToBase64Url` stand for any base64url helpers, such as `Buffer.from(value, "base64url")` in Node.js.
 
-```js
+### Extending a schema
+
+```ts
+import { JsonParser, JsonSerializer, JsonProp } from "@peculiar/json-schema";
+
 class BaseObject {
   @JsonProp({ name: "i" })
   public id = 0;
@@ -112,17 +124,18 @@ class Word extends BaseObject {
 
 class Person extends BaseObject {
   @JsonProp({ name: "n" })
-  public name = 0;
+  public name = "";
+
   @JsonProp({ name: "w", repeated: true, type: Word })
-  public words = [];
+  public words: Word[] = [];
 }
 
 const json = `{
-  "i":1,
-  "n":"Bob",
-  "w":[
-    {"i":2,"t":"hello"},
-    {"i":3,"t":"world"}
+  "i": 1,
+  "n": "Bob",
+  "w": [
+    { "i": 2, "t": "hello" },
+    { "i": 3, "t": "world" }
   ]
 }`;
 
@@ -132,6 +145,7 @@ console.log(person);
 const word = new Word();
 word.id = 4;
 word.text = "!!!";
+person.words.push(word);
 
 const jsonText = JsonSerializer.serialize(person, undefined, undefined, 2);
 console.log(jsonText);
@@ -139,6 +153,7 @@ console.log(jsonText);
 // Output
 //
 // Person {id: 1, name: "Bob", words: [Word {id: 2, text: "hello"}, Word {id: 3, text: "world"}]}
+//
 // {
 //   "i": 1,
 //   "n": "Bob",
@@ -161,4 +176,4 @@ console.log(jsonText);
 
 ## API
 
-Use [index.d.ts](index.d.ts) file
+See the type declarations in [`src/index.ts`](src/index.ts) (published as `build/index.d.ts`).
