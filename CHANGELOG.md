@@ -1,3 +1,14 @@
+# [2.0.0](https://github.com/PeculiarVentures/json-schema/compare/v1.1.12...v2.0.0) (2026-10-09)
+
+* build!: migrate from rollup to tsdown (#22) ([d8f6dda](https://github.com/PeculiarVentures/json-schema/commit/d8f6dda135bf07ef8aa322c5530b3d8763b10664)), closes [#22](https://github.com/PeculiarVentures/json-schema/issues/22)
+
+### BREAKING CHANGES
+
+* requires Node.js >= 16. The package now defines an
+  "exports" map, so deep imports into build/* are no longer allowed.
+  ESM build moved from build/index.es.js to build/index.mjs and types
+  from build/types/index.d.ts to build/index.d.ts.
+
 ## [1.1.12](https://github.com/PeculiarVentures/json-schema/compare/v1.1.11...v1.1.12) (2020-07-22)
 
 ### Bug Fixes
