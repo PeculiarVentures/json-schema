@@ -21,8 +21,7 @@
     "prepub:next": "npm run lint && npm run build",
     "pub:next": "npm version prerelease --preid=next && npm publish --tag next",
     "postpub:next": "git push",
-    "coverage": "nyc npm test",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc npm test"
   },
   "repository": {
     "type": "git",
@@ -59,6 +58,7 @@
     "@types/mocha": "^8.0.0",
     "@types/node": "^12.12.51",
     "mocha": "^8.0.1",
+    "nyc": "^17.1.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.22.2",
     "rollup-plugin-typescript2": "^0.27.1",
@@ -82,7 +82,8 @@
     ],
     "reporter": [
       "text-summary",
-      "html"
+      "html",
+      "lcov"
     ]
   },
   "mocha": {
