@@ -1,7 +1,7 @@
 {
   "name": "@peculiar/json-schema",
   "version": "1.1.12",
-  "description": "This package uses ES2015 decorators to simplify JSON schema creation and use",
+  "description": "Serialize, parse and validate JSON with TypeScript decorators",
   "main": "./build/index.js",
   "module": "./build/index.mjs",
   "types": "./build/index.d.ts",
