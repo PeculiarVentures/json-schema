@@ -1,30 +1,30 @@
-import * as assert from "assert";
-import { JsonParser, JsonProp, JsonPropTypes, JsonSerializer } from "../src";
+import { describe, expect, it } from "vitest";
+import { JsonParser, JsonProp, JsonPropTypes, JsonSerializer } from "../index";
 
 function testValidationSuccess(obj: any, json: string) {
   const json2 = JsonSerializer.serialize(obj);
-  assert.equal(json2, json);
+  expect(json2).toBe(json);
 
   const obj2 = JsonParser.parse(json, {
     targetSchema: obj.constructor,
   });
-  assert.deepEqual(obj2, obj);
+  expect(obj2).toEqual(obj);
 }
 
 function testValidationWrong(obj: any, json: string) {
-  assert.throws(() => {
+  expect(() => {
     JsonSerializer.serialize(obj);
-  });
+  }).toThrow();
 
-  assert.throws(() => {
+  expect(() => {
     JsonParser.parse(json, {
       targetSchema: obj.constructor,
     });
-  });
+  }).toThrow();
 }
 
-context("Validations", () => {
-  context("pattern", () => {
+describe("Validations", () => {
+  describe("pattern", () => {
     class Test {
       @JsonProp({ pattern: /[0-9]{6}/ })
       public value!: string;
@@ -43,8 +43,8 @@ context("Validations", () => {
     });
   });
 
-  context("length", () => {
-    context("string", () => {
+  describe("length", () => {
+    describe("string", () => {
       class Test {
         @JsonProp({ length: 6 })
         public value: string;
@@ -63,7 +63,7 @@ context("Validations", () => {
       });
     });
 
-    context("array", () => {
+    describe("array", () => {
       class Test {
         @JsonProp({ length: 6, repeated: true })
         public value: number[];
@@ -83,8 +83,8 @@ context("Validations", () => {
     });
   });
 
-  context("max length", () => {
-    context("string", () => {
+  describe("max length", () => {
+    describe("string", () => {
       class Test {
         @JsonProp({ maxLength: 6 })
         public value: string;
@@ -103,7 +103,7 @@ context("Validations", () => {
       });
     });
 
-    context("array", () => {
+    describe("array", () => {
       class Test {
         @JsonProp({ maxLength: 6, repeated: true })
         public value: number[];
@@ -123,8 +123,8 @@ context("Validations", () => {
     });
   });
 
-  context("min length", () => {
-    context("string", () => {
+  describe("min length", () => {
+    describe("string", () => {
       class Test {
         @JsonProp({ minLength: 3 })
         public value: string;
@@ -143,7 +143,7 @@ context("Validations", () => {
       });
     });
 
-    context("array", () => {
+    describe("array", () => {
       class Test {
         @JsonProp({ minLength: 3, repeated: true })
         public value: number[];
@@ -163,7 +163,7 @@ context("Validations", () => {
     });
   });
 
-  context("enum", () => {
+  describe("enum", () => {
     class Test {
       @JsonProp({ enumeration: ["val1", "val2"] })
       public value: "val1" | "val2" | string;
@@ -182,7 +182,7 @@ context("Validations", () => {
     });
   });
 
-  context("exclusive", () => {
+  describe("exclusive", () => {
     class Test {
       @JsonProp({ type: JsonPropTypes.Number, minExclusive: 1, maxExclusive: 3 })
       public value: number = 0;
@@ -229,7 +229,7 @@ context("Validations", () => {
     });
   });
 
-  context("inclusive", () => {
+  describe("inclusive", () => {
     class Test {
       @JsonProp({ type: JsonPropTypes.Number, minInclusive: 1, maxInclusive: 3 })
       public value: number = 0;

@@ -1,17 +1,17 @@
-import * as assert from "assert";
-import { JsonProp } from "../src/decorators";
-import { JsonPropTypes } from "../src/prop_types";
-import { JsonSerializer } from "../src/serializer";
-import { DEFAULT_SCHEMA, schemaStorage } from "../src/storage";
-import { IJsonConverter, IJsonConvertible } from "../src/types";
+import { describe, expect, it } from "vitest";
+import { JsonProp } from "./decorators";
+import { JsonPropTypes } from "./prop_types";
+import { JsonSerializer } from "./serializer";
+import { DEFAULT_SCHEMA, schemaStorage } from "./storage";
+import { IJsonConverter, IJsonConvertible } from "./types";
 
 const CustomNumberConverter: IJsonConverter<number, string> = {
   fromJSON: (value: string) => parseInt(value, 10),
   toJSON: (value: number) => value.toString(),
 };
 
-context("JsonSerializer", () => {
-  context("primitives", () => {
+describe("JsonSerializer", () => {
+  describe("primitives", () => {
     it("default schema", () => {
       class Test {
         @JsonProp()
@@ -21,10 +21,10 @@ context("JsonSerializer", () => {
       }
 
       const schema = schemaStorage.get(Test);
-      assert.equal(schema.names[DEFAULT_SCHEMA].value.type, JsonPropTypes.Any);
+      expect(schema.names[DEFAULT_SCHEMA].value.type).toBe(JsonPropTypes.Any);
 
       const json = JsonSerializer.serialize(new Test());
-      assert.equal(json, `{"value":2}`);
+      expect(json).toBe(`{"value":2}`);
     });
     it("number", () => {
       class Test {
@@ -35,10 +35,10 @@ context("JsonSerializer", () => {
       }
 
       const schema = schemaStorage.get(Test);
-      assert.equal(schema.names[DEFAULT_SCHEMA].value.type, JsonPropTypes.Number);
+      expect(schema.names[DEFAULT_SCHEMA].value.type).toBe(JsonPropTypes.Number);
 
       const json = JsonSerializer.serialize(new Test());
-      assert.equal(json, `{"value":2}`);
+      expect(json).toBe(`{"value":2}`);
     });
     it("default value", () => {
       class Test {
@@ -52,7 +52,7 @@ context("JsonSerializer", () => {
       }
 
       const json = JsonSerializer.serialize(new Test());
-      assert.equal(json, `{"b":2}`);
+      expect(json).toBe(`{"b":2}`);
     });
     it("custom name", () => {
       class Test {
@@ -63,7 +63,7 @@ context("JsonSerializer", () => {
       }
 
       const json = JsonSerializer.serialize(new Test());
-      assert.equal(json, `{"v":2}`);
+      expect(json).toBe(`{"v":2}`);
     });
     it("required", () => {
       class Test {
@@ -73,9 +73,9 @@ context("JsonSerializer", () => {
         public odd = 1;
       }
 
-      assert.throws(() => {
+      expect(() => {
         JsonSerializer.serialize(new Test());
-      });
+      }).toThrow();
     });
     it("optional", () => {
       class Test {
@@ -86,10 +86,10 @@ context("JsonSerializer", () => {
       }
 
       const json = JsonSerializer.serialize(new Test());
-      assert.equal(json, `{}`);
+      expect(json).toBe(`{}`);
     });
 
-    context("repeated", () => {
+    describe("repeated", () => {
       it("simple", () => {
         class Test {
           @JsonProp({ name: "v", repeated: true })
@@ -99,7 +99,7 @@ context("JsonSerializer", () => {
         }
 
         const json = JsonSerializer.serialize(new Test());
-        assert.equal(json, `{"v":[1,2,3]}`);
+        expect(json).toBe(`{"v":[1,2,3]}`);
       });
       it("converter", () => {
         class Test {
@@ -110,7 +110,7 @@ context("JsonSerializer", () => {
         }
 
         const json = JsonSerializer.serialize(new Test());
-        assert.equal(json, `{"v":["1","2","3"]}`);
+        expect(json).toBe(`{"v":["1","2","3"]}`);
       });
     });
 
@@ -121,11 +121,11 @@ context("JsonSerializer", () => {
       }
 
       const json = JsonSerializer.serialize(new Test());
-      assert.equal(json, `{"v":"2"}`);
+      expect(json).toBe(`{"v":"2"}`);
     });
 
-    context("validations", () => {
-      context("pattern", () => {
+    describe("validations", () => {
+      describe("pattern", () => {
         class Test {
           @JsonProp({ pattern: "^[0-9]{6}$" })
           public text!: string;
@@ -136,24 +136,24 @@ context("JsonSerializer", () => {
           test.text = "010203";
 
           const json = JsonSerializer.serialize(test);
-          assert.equal(json, `{"text":"010203"}`);
+          expect(json).toBe(`{"text":"010203"}`);
         });
 
         it("bad value", () => {
           const test = new Test();
           test.text = "0102";
 
-          assert.throws(() => {
+          expect(() => {
             JsonSerializer.serialize(test);
-          });
+          }).toThrow();
         });
       });
     });
   });
 
-  context("constructed", () => {
+  describe("constructed", () => {
     it("don't throw error if type has toJSON/fromJSON methods", () => {
-      // assert.doesNotThrow(() => {
+      // expect(() => {
       class Child implements IJsonConvertible {
         public value = 2;
         public fromJSON(_json: any): this {
@@ -167,10 +167,10 @@ context("JsonSerializer", () => {
         @JsonProp({ type: Child })
         public child = new Child();
       }
-      // });
+      // }).not.toThrow();
     });
     it("throw error if type class doesn't have schema or toJSON/fromJSON methods", () => {
-      assert.throws(() => {
+      expect(() => {
         class Child {
           public value = 2;
         }
@@ -178,7 +178,7 @@ context("JsonSerializer", () => {
           @JsonProp({ type: Child })
           public child = new Child();
         }
-      });
+      }).toThrow();
     });
     it("simple", () => {
       class Child {
@@ -195,7 +195,7 @@ context("JsonSerializer", () => {
       }
 
       const json = JsonSerializer.serialize(new Test());
-      assert.equal(json, `{"child":{"value":2}}`);
+      expect(json).toBe(`{"child":{"value":2}}`);
     });
     it("repeated", () => {
       class Child {
@@ -218,7 +218,7 @@ context("JsonSerializer", () => {
       }
 
       const json = JsonSerializer.serialize(new Test());
-      assert.equal(json, `{"children":[{"v":1},{"v":2},{"v":3}]}`);
+      expect(json).toBe(`{"children":[{"v":1},{"v":2},{"v":3}]}`);
     });
     it("IJsonConvertible", () => {
       class Test implements IJsonConvertible<string> {
@@ -233,17 +233,17 @@ context("JsonSerializer", () => {
         }
       }
       const value = JsonSerializer.serialize(new Test());
-      assert.equal(value, `"test"`);
+      expect(value).toBe(`"test"`);
     });
   });
   it("primitive", () => {
     const json = JsonSerializer.serialize(1);
-    assert.equal(json, "1");
+    expect(json).toBe("1");
   });
-  context("object", () => {
+  describe("object", () => {
     it("simple", () => {
       const json = JsonSerializer.serialize({ value: 1 });
-      assert.equal(json, `{"value":1}`);
+      expect(json).toBe(`{"value":1}`);
     });
     it("schema is deep inside in object", () => {
       class Test {
@@ -251,7 +251,7 @@ context("JsonSerializer", () => {
         public value = 2;
       }
       const json = JsonSerializer.serialize({ v: { v: new Test() } });
-      assert.equal(json, `{"v":{"v":{"value":2}}}`);
+      expect(json).toBe(`{"v":{"v":{"value":2}}}`);
     });
   });
   it("extended type with additional props", () => {
@@ -265,14 +265,14 @@ context("JsonSerializer", () => {
     }
 
     const json = JsonSerializer.serialize(new Child());
-    assert.equal(json, `{"id":"1","text":"some"}`);
+    expect(json).toBe(`{"id":"1","text":"some"}`);
   });
-  context("array", () => {
+  describe("array", () => {
     it("primitives", () => {
       const json = JsonSerializer.serialize([1, 2, 3]);
-      assert.equal(json, `[1,2,3]`);
+      expect(json).toBe(`[1,2,3]`);
     });
-    context("constructed", () => {
+    describe("constructed", () => {
       it("simple constructed type", () => {
         class Test {
           @JsonProp()
@@ -285,7 +285,7 @@ context("JsonSerializer", () => {
           }
         }
         const json = JsonSerializer.serialize([new Test("1"), new Test("2"), new Test("3")]);
-        assert.equal(json, `[{"value":"1"},{"value":"2"},{"value":"3"}]`);
+        expect(json).toBe(`[{"value":"1"},{"value":"2"},{"value":"3"}]`);
       });
       it("extended constructed type, child class doesn't have JsonProp", () => {
         const JsonDateConverter: IJsonConverter<Date, string> = {
@@ -311,12 +311,12 @@ context("JsonSerializer", () => {
 
         const json = JsonSerializer.serialize([new Child("1"), new Child("2"), new Child("3")]);
         // tslint:disable-next-line:max-line-length
-        assert.equal(json, `[{"createdAt":"1970-01-01T00:00:10.000Z","value":"1"},{"createdAt":"1970-01-01T00:00:10.000Z","value":"2"},{"createdAt":"1970-01-01T00:00:10.000Z","value":"3"}]`);
+        expect(json).toBe(`[{"createdAt":"1970-01-01T00:00:10.000Z","value":"1"},{"createdAt":"1970-01-01T00:00:10.000Z","value":"2"},{"createdAt":"1970-01-01T00:00:10.000Z","value":"3"}]`);
       });
     });
   });
 
-  context("serialize with target schema", () => {
+  describe("serialize with target schema", () => {
     it("simple", () => {
       const JsonDateConverter: IJsonConverter<Date, string> = {
         fromJSON: (value: string) => new Date(value),
@@ -344,7 +344,7 @@ context("JsonSerializer", () => {
         { targetSchema: Test },
       );
 
-      assert.equal(json, `{"createdAt":"1970-01-01T00:00:10.000Z","value":"text"}`);
+      expect(json).toBe(`{"createdAt":"1970-01-01T00:00:10.000Z","value":"text"}`);
     });
     it("throw error on bad data", () => {
       const JsonDateConverter: IJsonConverter<Date, string> = {
@@ -365,14 +365,14 @@ context("JsonSerializer", () => {
         }
       }
 
-      assert.throws(() => {
+      expect(() => {
         JsonSerializer.serialize(
           {
             createdAt: new Date(10000),
           },
           { targetSchema: Test },
         );
-      });
+      }).toThrow();
     });
     it("throw error for bad target schema", () => {
       class Test {
@@ -386,18 +386,18 @@ context("JsonSerializer", () => {
         }
       }
 
-      assert.throws(() => {
+      expect(() => {
         JsonSerializer.serialize(
           {
             createdAt: new Date(10000),
           },
           { targetSchema: Test },
         );
-      });
+      }).toThrow();
     });
   });
 
-  context("schema name", () => {
+  describe("schema name", () => {
     class Child {
       @JsonProp({ name: "name" })
       @JsonProp({ name: "n", schema: "short" })
@@ -422,7 +422,7 @@ context("JsonSerializer", () => {
       const test = new Test();
 
       const json = JsonSerializer.toJSON(test);
-      assert.deepEqual(json, {
+      expect(json).toEqual({
         value: "Value",
         child: {
           name: "Name",
@@ -435,7 +435,7 @@ context("JsonSerializer", () => {
       const test = new Test();
 
       const json = JsonSerializer.toJSON(test, { schemaName: "short" });
-      assert.deepEqual(json, {
+      expect(json).toEqual({
         v: "Value",
         c: {
           n: "Name",
@@ -449,7 +449,7 @@ context("JsonSerializer", () => {
 
       const json = JsonSerializer.toJSON(test, { schemaName: "wrong" });
       // must use default schema
-      assert.deepEqual(json, {
+      expect(json).toEqual({
         value: "Value",
         child: {
           name: "Name",
@@ -473,9 +473,9 @@ context("JsonSerializer", () => {
     test.value = "Value";
 
     const dbJson = JsonSerializer.toJSON(test, { schemaName: "db" });
-    assert.deepEqual(dbJson, { id: "12345", value: "Value" });
+    expect(dbJson).toEqual({ id: "12345", value: "Value" });
 
     const webJson = JsonSerializer.toJSON(test, { schemaName: "web" });
-    assert.deepEqual(webJson, { value: "Value" });
+    expect(webJson).toEqual({ value: "Value" });
   });
 });

@@ -1,9 +1,9 @@
-import * as assert from "assert";
-import { isConvertible } from "../src/helper";
-import { IJsonConvertible } from "../src/types";
+import { describe, expect, it } from "vitest";
+import { isConvertible } from "./helper";
+import { IJsonConvertible } from "./types";
 
-context("helper", () => {
-  context("isConvertible", () => {
+describe("helper", () => {
+  describe("isConvertible", () => {
     it("true", () => {
       class Test implements IJsonConvertible {
         public fromJSON(_json: any): this {
@@ -13,8 +13,8 @@ context("helper", () => {
           throw new Error("Method not implemented.");
         }
       }
-      assert.equal(isConvertible(new Test()), true);
-      assert.equal(isConvertible(Test), true);
+      expect(isConvertible(new Test())).toBe(true);
+      expect(isConvertible(Test)).toBe(true);
     });
     it("false", () => {
       class Test {
@@ -22,11 +22,11 @@ context("helper", () => {
           throw new Error("Method not implemented.");
         }
       }
-      assert.equal(isConvertible(new Test()), false);
-      assert.equal(isConvertible(Test), false);
+      expect(isConvertible(new Test())).toBe(false);
+      expect(isConvertible(Test)).toBe(false);
     });
     it("null", () => {
-      assert.equal(isConvertible(false), false);
+      expect(isConvertible(false)).toBe(false);
     });
   });
 });

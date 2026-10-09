@@ -88,7 +88,7 @@ export class JsonParser extends JsonTransform {
             obj[key] = this.fromJSON(value, newOptions);
           }
         }
-      } catch (e) {
+      } catch (e: any) {
         let error = e;
         if (!(error instanceof ParserError)) {
           // Wrap error

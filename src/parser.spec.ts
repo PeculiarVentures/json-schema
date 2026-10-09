@@ -1,17 +1,17 @@
-import * as assert from "assert";
-import { JsonProp } from "../src/decorators";
-import { KeyError, ParserError } from "../src/errors";
-import { JsonParser } from "../src/parser";
-import { JsonPropTypes } from "../src/prop_types";
-import { IJsonConverter, IJsonConvertible } from "../src/types";
+import { describe, expect, it } from "vitest";
+import { JsonProp } from "./decorators";
+import { KeyError, ParserError } from "./errors";
+import { JsonParser } from "./parser";
+import { JsonPropTypes } from "./prop_types";
+import { IJsonConverter, IJsonConvertible } from "./types";
 
 const CustomNumberConverter: IJsonConverter<number, string> = {
   fromJSON: (value: string) => parseInt(value, 10),
   toJSON: (value: number) => value.toString(),
 };
 
-context("Parse", () => {
-  context("primitives", () => {
+describe("Parse", () => {
+  describe("primitives", () => {
     it("default schema", () => {
       class Test {
         @JsonProp()
@@ -22,8 +22,8 @@ context("Parse", () => {
       const obj = JsonParser.parse(json, {
         targetSchema: Test,
       });
-      assert.equal(obj.value, 2);
-      assert.equal((obj as any).odd, undefined);
+      expect(obj.value).toBe(2);
+      expect((obj as any).odd).toBe(undefined);
     });
     it("required", () => {
       class Test {
@@ -32,11 +32,11 @@ context("Parse", () => {
       }
 
       const json = `{}`;
-      assert.throws(() => {
+      expect(() => {
         JsonParser.parse(json, {
           targetSchema: Test,
         });
-      });
+      }).toThrow();
     });
     it("optional", () => {
       class Test {
@@ -48,7 +48,7 @@ context("Parse", () => {
       const obj = JsonParser.parse(json, {
         targetSchema: Test,
       });
-      assert.equal(obj.value, 0);
+      expect(obj.value).toBe(0);
     });
     it("converter", () => {
       class Test {
@@ -60,7 +60,7 @@ context("Parse", () => {
       const obj = JsonParser.parse(json, {
         targetSchema: Test,
       });
-      assert.equal(obj.value, 2);
+      expect(obj.value).toBe(2);
     });
     it("custom name", () => {
       class Test {
@@ -72,9 +72,9 @@ context("Parse", () => {
       const obj = JsonParser.parse(json, {
         targetSchema: Test,
       });
-      assert.equal(obj.value, 2);
+      expect(obj.value).toBe(2);
     });
-    context("repeated", () => {
+    describe("repeated", () => {
       it("simple", () => {
         class Test {
           @JsonProp({ name: "v", repeated: true })
@@ -85,10 +85,10 @@ context("Parse", () => {
         const obj = JsonParser.parse(json, {
           targetSchema: Test,
         });
-        assert.equal(obj.value.length, 3);
-        assert.equal(obj.value[0], 1);
-        assert.equal(obj.value[1], 2);
-        assert.equal(obj.value[2], 3);
+        expect(obj.value.length).toBe(3);
+        expect(obj.value[0]).toBe(1);
+        expect(obj.value[1]).toBe(2);
+        expect(obj.value[2]).toBe(3);
       });
       it("converter", () => {
         class Test {
@@ -100,10 +100,10 @@ context("Parse", () => {
         const obj = JsonParser.parse(json, {
           targetSchema: Test,
         });
-        assert.equal(obj.value.length, 3);
-        assert.equal(obj.value[0], 1);
-        assert.equal(obj.value[1], 2);
-        assert.equal(obj.value[2], 3);
+        expect(obj.value.length).toBe(3);
+        expect(obj.value[0]).toBe(1);
+        expect(obj.value[1]).toBe(2);
+        expect(obj.value[2]).toBe(3);
       });
       it("throw error if property is not Array", () => {
         class Test {
@@ -114,7 +114,7 @@ context("Parse", () => {
           public values: string[] = [];
         }
 
-        assert.throws(() => {
+        expect(() => {
           JsonParser.fromJSON(
             {
               values: "not Array",
@@ -123,11 +123,11 @@ context("Parse", () => {
               targetSchema: Test,
             },
           );
-        });
+        }).toThrow();
       });
     });
-    context("check types", () => {
-      context("boolean", () => {
+    describe("check types", () => {
+      describe("boolean", () => {
         it("correct", () => {
           class Test {
             @JsonProp({ name: "v", type: JsonPropTypes.Boolean })
@@ -138,7 +138,7 @@ context("Parse", () => {
           const obj = JsonParser.parse(json, {
             targetSchema: Test,
           });
-          assert.equal(obj.value, true);
+          expect(obj.value).toBe(true);
         });
         it("wrong", () => {
           class Test {
@@ -147,14 +147,14 @@ context("Parse", () => {
           }
 
           const json = `{"v":1}`;
-          assert.throws(() => {
+          expect(() => {
             JsonParser.parse(json, {
               targetSchema: Test,
             });
-          });
+          }).toThrow();
         });
       });
-      context("number", () => {
+      describe("number", () => {
         it("correct", () => {
           class Test {
             @JsonProp({ name: "v", type: JsonPropTypes.Number })
@@ -165,7 +165,7 @@ context("Parse", () => {
           const obj = JsonParser.parse(json, {
             targetSchema: Test,
           });
-          assert.equal(obj.value, 1);
+          expect(obj.value).toBe(1);
         });
         it("wrong", () => {
           class Test {
@@ -174,14 +174,14 @@ context("Parse", () => {
           }
 
           const json = `{"v":"1"}`;
-          assert.throws(() => {
+          expect(() => {
             JsonParser.parse(json, {
               targetSchema: Test,
             });
-          });
+          }).toThrow();
         });
       });
-      context("string", () => {
+      describe("string", () => {
         it("correct", () => {
           class Test {
             @JsonProp({ name: "v", type: JsonPropTypes.String })
@@ -192,7 +192,7 @@ context("Parse", () => {
           const obj = JsonParser.parse(json, {
             targetSchema: Test,
           });
-          assert.equal(obj.value, "text");
+          expect(obj.value).toBe("text");
         });
         it("wrong", () => {
           class Test {
@@ -201,17 +201,17 @@ context("Parse", () => {
           }
 
           const json = `{"v":1}`;
-          assert.throws(() => {
+          expect(() => {
             JsonParser.parse(json, {
               targetSchema: Test,
             });
-          });
+          }).toThrow();
         });
       });
     });
-    context("validations", () => {
-      context("pattern", () => {
-        context("RegExp type", () => {
+    describe("validations", () => {
+      describe("pattern", () => {
+        describe("RegExp type", () => {
           class Test {
             @JsonProp({ pattern: /[0-9]{6}/ })
             public text!: string;
@@ -223,7 +223,7 @@ context("Parse", () => {
             const test = JsonParser.parse(json, {
               targetSchema: Test,
             });
-            assert.equal(test.text, test.text);
+            expect(test.text).toBe(test.text);
           });
 
           it("second checking", () => {
@@ -232,34 +232,34 @@ context("Parse", () => {
             const test = JsonParser.parse(json, {
               targetSchema: Test,
             });
-            assert.equal(test.text, test.text);
+            expect(test.text).toBe(test.text);
           });
 
           it("bad value", () => {
             const json = `{"text":"a23456"}`;
 
-            assert.throws(() => {
+            expect(() => {
               JsonParser.parse(json, {
                 targetSchema: Test,
               });
-            });
+            }).toThrow();
           });
 
           it("throw error if pattern is using for not string type", () => {
             const json = `{"text":123456}`;
 
-            assert.throws(() => {
+            expect(() => {
               JsonParser.parse(json, {
                 targetSchema: Test,
               });
-            });
+            }).toThrow();
           });
         });
       });
     });
   });
 
-  context("constructed", () => {
+  describe("constructed", () => {
     it("simple", () => {
       class Child {
         @JsonProp()
@@ -274,7 +274,7 @@ context("Parse", () => {
       const obj = JsonParser.parse(json, {
         targetSchema: Parent,
       });
-      assert.equal(obj.child.value, 2);
+      expect(obj.child.value).toBe(2);
     });
     it("repeated", () => {
       class Child {
@@ -290,9 +290,9 @@ context("Parse", () => {
       const obj = JsonParser.parse(json, {
         targetSchema: Parent,
       });
-      assert.equal(obj.children.length, 2);
-      assert.equal(obj.children[0].value, 1);
-      assert.equal(obj.children[1].value, 2);
+      expect(obj.children.length).toBe(2);
+      expect(obj.children[0].value).toBe(1);
+      expect(obj.children[1].value).toBe(2);
     });
     it("without schema and IJsonConvertible", () => {
       class Test implements IJsonConvertible<string> {
@@ -309,11 +309,11 @@ context("Parse", () => {
       const test = JsonParser.parse(`"test"`, {
         targetSchema: Test,
       });
-      assert.equal(test.name, "test");
+      expect(test.name).toBe("test");
     });
   });
 
-  context("schema name", () => {
+  describe("schema name", () => {
     class Child {
       @JsonProp({ name: "name" })
       @JsonProp({ name: "n", schema: "short" })
@@ -345,7 +345,7 @@ context("Parse", () => {
       const test = JsonParser.fromJSON(json, {
         targetSchema: Test,
       });
-      assert.deepEqual(test, {
+      expect(test).toEqual({
         value: "Value_new",
         child: {
           name: "Name_new",
@@ -365,7 +365,7 @@ context("Parse", () => {
         targetSchema: Test,
         schemaName: "short",
       });
-      assert.deepEqual(test, {
+      expect(test).toEqual({
         value: "Value_new",
         child: {
           name: "Name_new",
@@ -386,7 +386,7 @@ context("Parse", () => {
         targetSchema: Test,
         schemaName: "wrang",
       });
-      assert.deepEqual(test, {
+      expect(test).toEqual({
         value: "Value_new",
         child: {
           name: "Name_new",
@@ -396,17 +396,17 @@ context("Parse", () => {
     });
   });
 
-  context("Strict checking", () => {
-    context("strictProperty", () => {
+  describe("Strict checking", () => {
+    describe("strictProperty", () => {
       it("option is disabled by default", () => {
         class Test {
           @JsonProp()
           public value!: string;
         }
 
-        assert.doesNotThrow(() => {
+        expect(() => {
           JsonParser.fromJSON({ value: "hello", odd: 1 }, { targetSchema: Test });
-        });
+        }).not.toThrow();
       });
 
       it("should throw error if JSON has od field and option is enabled", () => {
@@ -415,9 +415,9 @@ context("Parse", () => {
           public value!: string;
         }
 
-        assert.throws(() => {
+        expect(() => {
           JsonParser.fromJSON({ value: "hello", odd: 1 }, { targetSchema: Test, strictProperty: true });
-        }, ParserError);
+        }).toThrow(ParserError);
       });
 
       it("use checking for array items", () => {
@@ -431,7 +431,7 @@ context("Parse", () => {
           public items: Test[] = [];
         }
 
-        assert.throws(() => {
+        expect(() => {
           JsonParser.fromJSON(
             {
               items: [{ value: "test1" }, { value: "test2", odd: 1 }],
@@ -441,12 +441,12 @@ context("Parse", () => {
               strictProperty: true,
             },
           );
-        }, ParserError);
+        }).toThrow(ParserError);
       });
     });
   });
 
-  context("Check all keys", () => {
+  describe("Check all keys", () => {
     it("Must add details about wrong keys to Error", () => {
       class Test {
         @JsonProp({ type: JsonPropTypes.String })
@@ -457,25 +457,19 @@ context("Parse", () => {
         public bool!: number;
       }
 
-      assert.throws(
-        () => {
-          JsonParser.fromJSON(
-            {
-              text: "Test",
-              bool: 10,
-            },
-            {
-              targetSchema: Test,
-              strictAllKeys: true,
-            },
-          );
-        },
-        (error: KeyError) => {
-          assert.equal(error instanceof KeyError, true);
-          assert.deepEqual(error.keys, ["number", "bool"]);
-          return true;
-        },
-      );
+      const parse = () =>
+        JsonParser.fromJSON(
+          {
+            text: "Test",
+            bool: 10,
+          },
+          {
+            targetSchema: Test,
+            strictAllKeys: true,
+          },
+        );
+      expect(parse).toThrow(KeyError);
+      expect(parse).toThrow(expect.objectContaining({ keys: ["number", "bool"] }));
     });
   });
 
@@ -491,11 +485,11 @@ context("Parse", () => {
     const json = { id: "12345", value: "Value" };
 
     const dbTest = JsonParser.fromJSON(json, { schemaName: "db", targetSchema: Test });
-    assert.equal(dbTest.value, "Value");
-    assert.equal(dbTest.id, "12345");
+    expect(dbTest.value).toBe("Value");
+    expect(dbTest.id).toBe("12345");
 
     const webTest = JsonParser.fromJSON(json, { schemaName: "web", targetSchema: Test });
-    assert.equal(webTest.value, "Value");
-    assert.equal(webTest.id, undefined);
+    expect(webTest.value).toBe("Value");
+    expect(webTest.id).toBe(undefined);
   });
 });
