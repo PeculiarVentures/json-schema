@@ -42,7 +42,7 @@ The package is ESM-only with TypeScript declarations, and requires Node.js `^20.
 
 ## Breaking Changes In v3
 
-v3 ships ESM only. The CommonJS build is removed: v2 published `build/index.js` (CommonJS), `build/index.mjs` (ESM) and `build/index.d.mts`; v3 publishes a single ES module, `build/index.js`, with `build/index.d.ts`, behind an `exports` map.
+v3 ships ESM only. The CommonJS build is removed: v2 published `build/index.js` (CommonJS), `build/index.mjs` (ESM) and `build/index.d.mts`; v3 publishes ES modules only, with `build/index.js` and `build/index.d.ts` as the entry point behind an `exports` map. The other files under `build/` mirror `src/` and are internal.
 
 - **Node.js `^20.19.0 || >=22.12.0` is required** (previously `>=16.0.0`). These versions support `require()` of ES modules, so CommonJS code can keep using `require("@peculiar/json-schema")` without changes. Node.js 22.0–22.11 is not supported: it can't `require()` ESM.
 - **TypeScript projects that compile to CommonJS** need `"module": "node20"` or `"nodenext"` (TypeScript 5.9+). With `"module": "node16"` the compiler reports TS1479.
@@ -50,9 +50,10 @@ v3 ships ESM only. The CommonJS build is removed: v2 published `build/index.js` 
 - **Legacy `"moduleResolution": "node"` (node10)** resolves the package through `types`; `@peculiar/json-schema` has no subpath exports, so nothing else changes.
 - **Jest in CommonJS mode** can't load ESM packages. Use Jest's ESM mode, add `@peculiar/json-schema` to the `transformIgnorePatterns` exceptions, or switch to Vitest.
 - **Deep imports stay blocked.** The `exports` map allows only `@peculiar/json-schema` and `@peculiar/json-schema/package.json`, as in v2.
+- **Internal types are no longer exported.** The bundled v2 declarations accidentally exposed `IJsonSchema`, `IJsonSchemaItem`, `IJsonNamedSchema` and `JsonTransform` as types. v3 exports the same 18 names as v1 and `src/index.ts`; type imports of those four no longer compile.
 - **`require()` and `import` share one schema storage.** v2 shipped separate CommonJS and ESM copies, so an application that loaded both (for example ESM code plus a CommonJS dependency) got two schema storages, and classes decorated through one copy were unknown to `JsonParser`/`JsonSerializer` from the other. v3 has a single module, so both load the same storage.
 
-The public API is unchanged; only packaging and runtime requirements changed. `@JsonProp` still needs `"experimentalDecorators": true`.
+Apart from those four internal types, the public API is unchanged; only packaging and runtime requirements changed. `@JsonProp` still needs `"experimentalDecorators": true`.
 
 ## Examples
 

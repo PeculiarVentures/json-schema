@@ -9,6 +9,10 @@ export default defineConfig({
   platform: "neutral",
   dts: true,
   clean: true,
+  // Emit one file per source module. Bundled multi-entry declarations leave
+  // rolldown's `__exportAll` namespace helper in shared declaration chunks
+  // (see rolldown/tsdown#1051); unbundled output keeps it in its own module.
+  unbundle: true,
   // Keep .js/.d.ts output names (package.json is "type": "module")
   // instead of fixed .mjs/.d.mts extensions.
   fixedExtension: false,
