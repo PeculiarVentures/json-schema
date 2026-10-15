@@ -2,15 +2,13 @@
   "name": "@peculiar/json-schema",
   "version": "2.0.0",
   "description": "Serialize, parse and validate JSON with TypeScript decorators",
+  "type": "module",
   "main": "./build/index.js",
-  "module": "./build/index.mjs",
+  "module": "./build/index.js",
   "types": "./build/index.d.ts",
   "sideEffects": false,
   "exports": {
-    ".": {
-      "import": "./build/index.mjs",
-      "require": "./build/index.js"
-    },
+    ".": "./build/index.js",
     "./package.json": "./package.json"
   },
   "files": [
@@ -61,16 +59,15 @@
   },
   "homepage": "https://github.com/PeculiarVentures/json-schema#readme",
   "engines": {
-    "node": ">=16.0.0"
+    "node": "^20.19.0 || >=22.12.0"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
-    "@types/node": "^22.20.5",
-    "@vitest/coverage-v8": "^4.1.11",
-    "oxfmt": "^0.72.0",
-    "oxlint": "^1.87.0",
-    "tsdown": "^0.23.0",
+    "@vitest/coverage-v8": "^5.0.5",
+    "oxfmt": "^0.73.0",
+    "oxlint": "^1.88.0",
+    "tsdown": "^0.23.1",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.5"
   }
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { isConvertible } from "./helper";
-import { IJsonConvertible } from "./types";
+import type { IJsonConvertible } from "./types";
 
 describe("helper", () => {
   describe("isConvertible", () => {

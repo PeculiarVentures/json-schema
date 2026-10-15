@@ -1,5 +1,5 @@
 import { throwIfTypeIsWrong } from "./helper";
-import { IJsonSchema, IJsonSchemaItem } from "./schema";
+import type { IJsonSchema, IJsonSchemaItem } from "./schema";
 import { DEFAULT_SCHEMA } from "./storage";
 import { LengthValidation } from "./validations";
 

@@ -1,5 +1,5 @@
 import { ValidationError } from "../errors/validation_error";
-import { IValidation } from "../types";
+import type { IValidation } from "../types";
 
 export class LengthValidation implements IValidation {
   constructor(
