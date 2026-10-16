@@ -1,9 +1,4 @@
-.vscode/
-build/
-node_modules/
-
-# coverage
-coverage/
-
-# Mac
+coverage
+node_modules
+build
 .DS_Store

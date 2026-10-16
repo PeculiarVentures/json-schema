@@ -1,4 +1,4 @@
-import { IJsonSchema } from "../schema";
+import type { IJsonSchema } from "../schema";
 import { TransformError } from "./transform_error";
 
 export class ParserError extends TransformError {

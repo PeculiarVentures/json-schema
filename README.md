@@ -28,7 +28,7 @@ All input data is untrusted, so it should be validated before use. Parsing into 
 npm install @peculiar/json-schema
 ```
 
-The package ships both ESM and CommonJS builds with TypeScript declarations, and requires Node.js 16 or later.
+The package is ESM-only with TypeScript declarations, and requires Node.js `^20.19.0 || >=22.12.0`. CommonJS code can still `require()` it on those versions.
 
 `@JsonProp` is a TypeScript legacy (experimental) decorator. Enable it in your `tsconfig.json`:
 
@@ -40,12 +40,27 @@ The package ships both ESM and CommonJS builds with TypeScript declarations, and
 }
 ```
 
+## Breaking Changes In v3
+
+v3 ships ESM only. The CommonJS build is removed: v2 published `build/index.js` (CommonJS), `build/index.mjs` (ESM) and `build/index.d.mts`; v3 publishes ES modules only, with `build/index.js` and `build/index.d.ts` as the entry point behind an `exports` map. The other files under `build/` mirror `src/` and are internal.
+
+- **Node.js `^20.19.0 || >=22.12.0` is required** (previously `>=16.0.0`). These versions support `require()` of ES modules, so CommonJS code can keep using `require("@peculiar/json-schema")` without changes. Node.js 22.0–22.11 is not supported: it can't `require()` ESM.
+- **TypeScript projects that compile to CommonJS** need `"module": "node20"` or `"nodenext"` (TypeScript 5.9+). With `"module": "node16"` the compiler reports TS1479.
+- **ESM and bundler setups** (`"module": "preserve"`, `"moduleResolution": "bundler"`) work without changes.
+- **Legacy `"moduleResolution": "node"` (node10)** resolves the package through `types`; `@peculiar/json-schema` has no subpath exports, so nothing else changes.
+- **Jest in CommonJS mode** can't load ESM packages. Use Jest's ESM mode, add `@peculiar/json-schema` to the `transformIgnorePatterns` exceptions, or switch to Vitest.
+- **Deep imports stay blocked.** The `exports` map allows only `@peculiar/json-schema` and `@peculiar/json-schema/package.json`, as in v2.
+- **Internal types are no longer exported.** The bundled v2 declarations accidentally exposed `IJsonSchema`, `IJsonSchemaItem`, `IJsonNamedSchema` and `JsonTransform` as types. v3 exports the same 18 names as v1 and `src/index.ts`; type imports of those four no longer compile.
+- **`require()` and `import` share one schema storage.** v2 shipped separate CommonJS and ESM copies, so an application that loaded both (for example ESM code plus a CommonJS dependency) got two schema storages, and classes decorated through one copy were unknown to `JsonParser`/`JsonSerializer` from the other. v3 has a single module, so both load the same storage.
+
+Apart from those four internal types, the public API is unchanged; only packaging and runtime requirements changed. `@JsonProp` still needs `"experimentalDecorators": true`.
+
 ## Examples
 
 ### Creating a schema
 
 ```ts
-import { JsonParser, JsonSerializer, JsonProp, JsonPropTypes, IJsonConverter } from "@peculiar/json-schema";
+import { JsonParser, JsonSerializer, JsonProp, JsonPropTypes, type IJsonConverter } from "@peculiar/json-schema";
 
 // Custom data converter
 const JsonBase64UrlConverter: IJsonConverter<Uint8Array, string> = {
@@ -177,3 +192,7 @@ console.log(jsonText);
 ## API
 
 See the type declarations in [`src/index.ts`](src/index.ts) (published as `build/index.d.ts`).
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, commit conventions and the release flow.

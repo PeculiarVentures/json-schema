@@ -1,7 +1,7 @@
 import { ValidationError } from "../errors/validation_error";
 import { throwIfTypeIsWrong } from "../helper";
 import { JsonPropTypes } from "../prop_types";
-import { IValidation } from "../types";
+import type { IValidation } from "../types";
 
 export class EnumerationValidation implements IValidation {
   constructor(private enumeration: string[]) {}

@@ -1,9 +1,9 @@
 import { KeyError, ParserError } from "./errors";
 import { isConvertible } from "./helper";
-import { IJsonSchema } from "./schema";
+import type { IJsonSchema } from "./schema";
 import { DEFAULT_SCHEMA, schemaStorage } from "./storage";
-import { IJsonNamedSchema, JsonTransform } from "./transform";
-import { IEmptyConstructor } from "./types";
+import { type IJsonNamedSchema, JsonTransform } from "./transform";
+import type { IEmptyConstructor } from "./types";
 
 export interface IJsonParserOptions<T> {
   targetSchema: IEmptyConstructor<T>;

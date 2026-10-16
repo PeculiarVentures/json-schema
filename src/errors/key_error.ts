@@ -1,4 +1,4 @@
-import { IJsonSchema } from "../schema";
+import type { IJsonSchema } from "../schema";
 import { ParserError } from "./parser_error";
 
 export interface IKeyErrors {

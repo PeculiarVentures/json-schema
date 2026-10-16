@@ -1,5 +1,5 @@
 import { JsonPropTypes } from "./prop_types";
-import { IJsonConvertible } from "./types";
+import type { IJsonConvertible } from "./types";
 
 export function checkType(value: any, type: JsonPropTypes) {
   switch (type) {
