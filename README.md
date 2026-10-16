@@ -5,7 +5,7 @@
 <div align="center">
 
 ![NPM License](https://img.shields.io/npm/l/@peculiar/json-schema)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/PeculiarVentures/json-schema/test.yml?label=test)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/PeculiarVentures/json-schema/publish.yml?branch=master&label=publish)
 [![npm version](https://img.shields.io/npm/v/@peculiar/json-schema.svg)](https://www.npmjs.com/package/@peculiar/json-schema)
 ![Coveralls](https://img.shields.io/coverallsCoverage/github/PeculiarVentures/json-schema)
 [![npm downloads](https://img.shields.io/npm/dm/@peculiar/json-schema.svg)](https://www.npmjs.com/package/@peculiar/json-schema)
