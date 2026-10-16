@@ -1,6 +1,6 @@
 {
   "name": "@peculiar/json-schema",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Serialize, parse and validate JSON with TypeScript decorators",
   "type": "module",
   "main": "./build/index.js",
